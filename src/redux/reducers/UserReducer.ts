@@ -1,24 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AUTH_VALUES, isUserAuthenticathed } from "../../hooks/authentication";
 import { FETCH_STATE } from "../../const/Common";
+import { AUTH_VALUES } from "../../hooks/authentication";
 
 const { IDLE, ERROR } = FETCH_STATE;
 const { AUTH_TOKEN, TOKEN_EXPIRES } = AUTH_VALUES;
 
 const initialState = {
   loginState: IDLE,
-  isAuthenticathed: isUserAuthenticathed
+  registerState: IDLE
 };
 
-const AuthReducer = createSlice({
-  name: "AuthReducer",
+const UserReducer = createSlice({
+  name: "UserReducer",
   initialState,
   reducers: {
+    // Register
+    updateRegisterState: (nextState, { payload }) => {
+      nextState.registerState = payload;
+    },
+
+    // Login
     updateLoginState: (nextState, { payload }) => {
       nextState.loginState = payload;
 
       if (payload === ERROR && localStorage.getItem(AUTH_TOKEN)) {
-        nextState.isAuthenticathed = false;
         localStorage.removeItem(AUTH_TOKEN);
         localStorage.removeItem(TOKEN_EXPIRES);
       }
@@ -30,17 +35,20 @@ const AuthReducer = createSlice({
         TOKEN_EXPIRES,
         (Date.now() + 3600 * 1000) as unknown as string
       );
-      nextState.isAuthenticathed = true;
     },
 
-    logoutSuccess: (nextState) => {
-      nextState.isAuthenticathed = false;
+    logoutSuccess: () => {
       localStorage.removeItem(AUTH_TOKEN);
       localStorage.removeItem(TOKEN_EXPIRES);
     }
   }
 });
 
-export const { updateLoginState, loginSuccess, logoutSuccess } =
-  AuthReducer.actions;
-export default AuthReducer.reducer;
+export const {
+  updateRegisterState,
+  updateLoginState,
+  loginSuccess,
+  logoutSuccess
+} = UserReducer.actions;
+
+export default UserReducer.reducer;

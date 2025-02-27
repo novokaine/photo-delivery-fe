@@ -1,6 +1,7 @@
 import { AUTH_VALUES } from "../hooks/authentication";
+import { UserDataTypes } from "../redux/Types/UserDataTypes";
 
-const baseUrl = "http://localhost:8000";
+const baseUrl = "http://localhost:8000/api";
 
 const username = "durau";
 const password = "partyTime2025";
@@ -86,7 +87,7 @@ const api = {
     userName: string;
     password: string;
   }) => {
-    const apiUrl = `${baseUrl}/public/login`;
+    const apiUrl = `${baseUrl}/login`;
 
     const requestOptions = {
       method: "POST",
@@ -98,6 +99,22 @@ const api = {
 
     const promise = await fetch(apiUrl, requestOptions);
     handleResponse(promise);
+  },
+
+  register: async ({ userName, password }: UserDataTypes): Promise<any> => {
+    const apiUrl = `${baseUrl}/register`;
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({ userName, password })
+    };
+    const promise = await fetch(apiUrl, requestOptions);
+    if (promise.status !== 204) {
+      return promise.json();
+    }
+    throw new Error(`Cannot register ${userName}`);
   }
 };
 

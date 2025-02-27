@@ -1,28 +1,21 @@
-import TextField from "@mui/material/TextField";
+import { useFormik } from "formik";
+import { useDispatch } from "react-redux";
+import * as Yup from "yup";
+import { UserDataTypes } from "../../redux/Types/UserDataTypes";
+import { AppDispatch } from "../../redux";
+
 import {
   Box,
   Button,
-  CircularProgress,
   Container,
   Paper,
+  TextField,
   Typography
 } from "@mui/material";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { loginAction } from "../../redux/actions/LoginActions";
-import { AppDispatch } from "../../redux";
-import { loginStateSelector } from "../../redux/selectors/LoginSelectors";
-import { FETCH_STATE } from "../../const/Common";
-import DialogModal from "../DialogModal";
-import { updateLoginState } from "../../redux/reducers/Authentication";
+import { registerAction } from "../../redux/actions/UserActions";
 
-import "./css/login.scss";
-
-const Login = () => {
+const Register = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const loginState = useSelector(loginStateSelector);
-
   const formik = useFormik({
     initialValues: {
       userName: "",
@@ -32,42 +25,29 @@ const Login = () => {
       userName: Yup.string().required("Username is required"),
       password: Yup.string().required("Password is required")
     }),
-    onSubmit: (values) => dispatch(loginAction(values))
+    onSubmit: (userData: UserDataTypes) => dispatch(registerAction(userData))
   });
-
-  const isLoading = loginState === FETCH_STATE.LOADING;
-  const isError = loginState === FETCH_STATE.ERROR;
 
   return (
     <Container
-      component={"main"}
-      maxWidth={"xs"}
+      component="main"
+      maxWidth="xs"
       sx={{
         display: "flex",
         alignItems: "center",
         height: "100vh",
-        justifyContent: "center"
+        justifyContentL: "center"
       }}
     >
-      <DialogModal
-        isOpen={isError}
-        dialogTitle="Error"
-        dialogText="Authentication error occured"
-        handleClose={() => dispatch(updateLoginState(FETCH_STATE.IDLE))}
-      />
-      <Paper
-        elevation={3}
-        sx={{ padding: 3, width: "100%" }}
-        className="paper-form"
-      >
+      <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
         <Typography variant="h5" align="center" gutterBottom>
-          Login
+          Register
         </Typography>
         <form onSubmit={formik.handleSubmit}>
           <TextField
             fullWidth
             id="userName"
-            label="Please enter your username*"
+            label="Please enter yout username"
             value={formik.values.userName}
             onChange={formik.handleChange}
             error={formik.touched.userName && Boolean(formik.errors.userName)}
@@ -77,15 +57,14 @@ const Login = () => {
           />
           <TextField
             fullWidth
-            type="password"
             id="password"
-            label="Please enter your password*"
+            label="Please choose a password"
             value={formik.values.password}
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
             margin="normal"
             autoComplete="off"
+            type="password"
           />
           <Box mt={2}>
             <Button
@@ -93,11 +72,9 @@ const Login = () => {
               fullWidth
               variant="contained"
               type="submit"
-              disabled={loginState === FETCH_STATE.LOADING}
               className="submit"
             >
-              <span>Login</span>
-              {isLoading && <CircularProgress color="secondary" size={20} />}
+              <span>Register</span>
             </Button>
           </Box>
         </form>
@@ -106,4 +83,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
