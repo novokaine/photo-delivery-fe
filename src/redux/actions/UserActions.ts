@@ -1,43 +1,60 @@
 import { AppThunk } from "..";
 import api from "../../api/Api";
 import { FETCH_STATE } from "../../const/Common";
-import { useIsAuthenticated } from "../../hooks/authentication";
-import { updateLoginState } from "../reducers/UserReducer";
+import {
+  updateUserFetchState,
+  updateUserLoginState
+} from "../reducers/UserReducer";
+import { updateAccessToken } from "../reducers/TokenReducers";
 import { updateRegisterState } from "../reducers/UserReducer";
 import { UserDataTypes } from "../Types/UserDataTypes";
 
+const { LOADING, SUCCESS, IDLE, ERROR } = FETCH_STATE;
+
 export const registerAction =
   ({ userName, password }: UserDataTypes): AppThunk =>
-  (dispatch, getState) => {
+  (dispatch) => {
     if (!userName || !password) {
       return;
     }
 
-    dispatch(updateRegisterState(FETCH_STATE.LOADING));
+    dispatch(updateRegisterState(LOADING));
 
     api
       .register({ userName, password })
-      .then((response) => {
-        dispatch(updateRegisterState(FETCH_STATE.IDLE));
+      .then(() => {
+        dispatch(updateRegisterState(SUCCESS));
       })
-      .catch((err) => {
-        dispatch(updateRegisterState(FETCH_STATE.ERROR));
+      .catch(() => {
+        dispatch(updateRegisterState(ERROR));
       });
   };
 
 export const loginAction =
   ({ userName, password }: UserDataTypes): AppThunk =>
-  (dispatch, getState) => {
-    const { isUserAuthenticathed } = useIsAuthenticated();
-    if (isUserAuthenticathed) return;
-
-    dispatch(updateLoginState(FETCH_STATE.LOADING));
-
+  (dispatch) => {
+    dispatch(updateUserFetchState(LOADING));
     api
       .login({ userName, password })
-      .then((res) => {
-        console.log(res);
-        dispatch(updateLoginState(FETCH_STATE.IDLE));
+      .then(({ accessToken }) => {
+        dispatch(updateAccessToken(accessToken));
+        dispatch(updateUserLoginState(true));
+        dispatch(updateUserFetchState(SUCCESS));
       })
-      .catch(() => dispatch(updateLoginState(FETCH_STATE.ERROR)));
+      .catch((err) => {
+        dispatch(updateAccessToken(null));
+        dispatch(updateUserFetchState(ERROR));
+      });
   };
+
+export const logoutAction = (): AppThunk => (dispatch) => {
+  dispatch(updateUserFetchState(LOADING));
+  api
+    .logout()
+    .then((response) => {
+      dispatch(updateUserLoginState(false));
+      dispatch(updateAccessToken(null));
+      dispatch(updateUserFetchState(IDLE));
+    })
+    .catch(() => dispatch(updateUserFetchState(ERROR)));
+};

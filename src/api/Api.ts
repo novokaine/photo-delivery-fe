@@ -1,26 +1,22 @@
-import { AUTH_VALUES } from "../hooks/authentication";
 import { UserDataTypes } from "../redux/Types/UserDataTypes";
 
 const baseUrl = "http://localhost:8000/api";
 
-const username = "durau";
-const password = "partyTime2025";
-const credentials = btoa(`${username}:${password}`); // Encode credentials in Base64
-
-const picAuthToken = localStorage.getItem(AUTH_VALUES.AUTH_TOKEN);
-const tokenExpires = localStorage.getItem(AUTH_VALUES.TOKEN_EXPIRES);
-
-const headers = {
-  "Access-Control-Allow-Origin": "*",
-  "Content-Type": "application/json",
-  Authorization: `Basic ${credentials}`
+const handleResponse = async (response: Response): Promise<any> => {
+  if (response.status !== 204) return await response.json();
+  throw new Error("Cannot fetch data");
 };
 
-const handleResponse = async (response: Response) => {
-  if (response.status !== 204) {
-    return response.json();
-  }
-  throw new Error("Cannot fetch data");
+const withAuthToken = <T extends (...args: any[]) => Promise<any>>(
+  apiMethod: T
+) => {
+  return (async (...args: any[]) => {
+    // const token = store.getState().auth.accessToken;
+    const token = "";
+    if (!token) throw new Error("No access token available");
+
+    return apiMethod(token, ...args);
+  }) as T;
 };
 
 const api = {
@@ -29,10 +25,22 @@ const api = {
     const response = await fetch(apiUrl, {
       mode: "cors",
       credentials: "same-origin",
-      headers
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      }
     });
 
     handleResponse(response);
+  },
+
+  getRefreshToken: async () => {
+    const refreshToken = await fetch(`${baseUrl}/refresh-token`, {
+      method: "POST",
+      credentials: "include"
+    });
+
+    return handleResponse(refreshToken);
   },
 
   downloadSelection: async (selectedImages: string[]) => {
@@ -44,8 +52,7 @@ const api = {
     const response = await fetch(`${baseUrl}/private/download`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ${credentials}`
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({ selectedImages })
     });
@@ -80,27 +87,6 @@ const api = {
     handleResponse(response);
   },
 
-  login: async ({
-    userName,
-    password
-  }: {
-    userName: string;
-    password: string;
-  }) => {
-    const apiUrl = `${baseUrl}/login`;
-
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ userName, password })
-    };
-
-    const promise = await fetch(apiUrl, requestOptions);
-    handleResponse(promise);
-  },
-
   register: async ({ userName, password }: UserDataTypes): Promise<any> => {
     const apiUrl = `${baseUrl}/register`;
     const requestOptions = {
@@ -108,13 +94,43 @@ const api = {
       headers: {
         "Content-type": "application/json"
       },
-      body: JSON.stringify({ userName, password })
+      body: JSON.stringify({ username: userName, password })
     };
     const promise = await fetch(apiUrl, requestOptions);
+
     if (promise.status !== 204) {
       return promise.json();
     }
+
     throw new Error(`Cannot register ${userName}`);
+  },
+
+  login: async ({
+    userName,
+    password
+  }: UserDataTypes): Promise<{ accessToken: string }> => {
+    const apiUrl = `${baseUrl}/login`;
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: userName, password }),
+      credentials: "include" as RequestCredentials
+    };
+
+    const promise = await fetch(apiUrl, requestOptions);
+    return handleResponse(promise);
+  },
+
+  logout: async () => {
+    const apiUrl = `${baseUrl}/logout`;
+    const requestOptions = {
+      method: "POST",
+      credentials: "include"
+    } as RequestInit;
+
+    const promise = await fetch(apiUrl, requestOptions);
+    return handleResponse(promise);
   }
 };
 

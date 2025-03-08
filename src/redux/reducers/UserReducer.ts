@@ -1,13 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FETCH_STATE } from "../../const/Common";
-import { AUTH_VALUES } from "../../hooks/authentication";
+import { UserReducerType } from "../Types/UserDataTypes";
 
-const { IDLE, ERROR } = FETCH_STATE;
-const { AUTH_TOKEN, TOKEN_EXPIRES } = AUTH_VALUES;
+const { IDLE } = FETCH_STATE;
 
-const initialState = {
+const initialState: UserReducerType = {
   loginState: IDLE,
-  registerState: IDLE
+  registerState: IDLE,
+  isUserLoggedIn: false
 };
 
 const UserReducer = createSlice({
@@ -15,40 +15,30 @@ const UserReducer = createSlice({
   initialState,
   reducers: {
     // Register
-    updateRegisterState: (nextState, { payload }) => {
+    updateRegisterState: (
+      nextState,
+      { payload }: PayloadAction<FETCH_STATE>
+    ) => {
       nextState.registerState = payload;
     },
 
-    // Login
-    updateLoginState: (nextState, { payload }) => {
+    updateUserFetchState: (
+      nextState,
+      { payload }: PayloadAction<FETCH_STATE>
+    ) => {
       nextState.loginState = payload;
-
-      if (payload === ERROR && localStorage.getItem(AUTH_TOKEN)) {
-        localStorage.removeItem(AUTH_TOKEN);
-        localStorage.removeItem(TOKEN_EXPIRES);
-      }
     },
 
-    loginSuccess: (nextState, { payload }) => {
-      localStorage.setItem(AUTH_TOKEN, payload);
-      localStorage.setItem(
-        TOKEN_EXPIRES,
-        (Date.now() + 3600 * 1000) as unknown as string
-      );
-    },
-
-    logoutSuccess: () => {
-      localStorage.removeItem(AUTH_TOKEN);
-      localStorage.removeItem(TOKEN_EXPIRES);
+    updateUserLoginState: (nextState, { payload }: PayloadAction<boolean>) => {
+      nextState.isUserLoggedIn = payload;
     }
   }
 });
 
 export const {
   updateRegisterState,
-  updateLoginState,
-  loginSuccess,
-  logoutSuccess
+  updateUserFetchState,
+  updateUserLoginState
 } = UserReducer.actions;
 
 export default UserReducer.reducer;

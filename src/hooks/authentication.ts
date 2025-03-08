@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
-
-export const AUTH_VALUES = {
-  AUTH_TOKEN: "picAuthToken",
-  TOKEN_EXPIRES: "tokenExpire"
-};
+import { useCallback, useEffect, useState } from "react";
+import api from "../api/Api";
 
 export const useIsAuthenticated = (): { isUserAuthenticathed: boolean } => {
-  const [isUserAuthenticathed, setIsUserAuthenticathed] =
-    useState<boolean>(false);
-  const picAuthToken = localStorage.getItem(AUTH_VALUES.AUTH_TOKEN);
-  const tokenExpires = localStorage.getItem(AUTH_VALUES.TOKEN_EXPIRES);
+  const [isUserAuthenticathed, setIsUserAuthenticathed] = useState<boolean>(
+    !!localStorage.getItem("accessToken")
+  );
+
+  // const getAccessToken = useCallback(async (): Promise<any> => {
+  //   try {
+  //     const result: any = await api.getAccessToken();
+  //     if (!result) return;
+  //     localStorage.setItem("accessToken", result.accessToken);
+  //     setIsUserAuthenticathed(true);
+  //   } catch (err) {
+  //     setIsUserAuthenticathed(false);
+  //   }
+  // }, []);
 
   useEffect(() => {
-    if (!picAuthToken || !tokenExpires) {
-      setIsUserAuthenticathed(false);
-      return;
-    }
-
-    const expirationTime = new Date(tokenExpires).getTime();
-    const currentTime = new Date().getTime();
-    setIsUserAuthenticathed(currentTime < expirationTime);
-  }, [picAuthToken, tokenExpires]);
+    if (isUserAuthenticathed) return;
+    // getAccessToken();
+  }, [isUserAuthenticathed]);
 
   return { isUserAuthenticathed };
 };

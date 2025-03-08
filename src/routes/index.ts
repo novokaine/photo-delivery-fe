@@ -1,4 +1,6 @@
 import { lazy } from "react";
+import { RoutesTypes } from "./Types/RouteCommonTypes";
+import Login from "./Login";
 
 // export const routes = {
 //   home: "/",
@@ -17,10 +19,11 @@ import { lazy } from "react";
 //   badGateway: "/502"
 // };
 
-const Login = lazy(() => import("./Login"));
+// const Login = lazy(() => import("./Login"));
 const Register = lazy(() => import("./Register"));
+const DashBoard = lazy(() => import("./Dashboard"));
 
-export const routes = [
+export const routes: RoutesTypes[] = [
   {
     path: "/login",
     Component: Login,
@@ -30,5 +33,10 @@ export const routes = [
     path: "/register",
     Component: Register,
     isPrivate: false
+  },
+  {
+    path: "/dashboard",
+    Component: DashBoard,
+    isPrivate: true
   }
 ];

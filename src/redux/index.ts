@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import UserReducer from "./reducers/UserReducer";
 import ImageListReducer from "./reducers/ImageListReducer";
+import TokenReducer from "./reducers/TokenReducers";
 
 export const store = configureStore({
   reducer: {
     UserReducer,
-    ImageListReducer
+    ImageListReducer,
+    TokenReducer
   }
 });
 

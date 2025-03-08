@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import {
@@ -13,22 +14,30 @@ import * as Yup from "yup";
 import { AppDispatch } from "../../redux";
 import { FETCH_STATE } from "../../const/Common";
 import DialogModal from "../../components/DialogModal";
-import { updateLoginState } from "../../redux/reducers/UserReducer";
+import { updateUserFetchState } from "../../redux/reducers/UserReducer";
 import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 
 import { loginAction } from "../../redux/actions/UserActions";
-import { userLoginState } from "../../redux/selectors/UserSelectors";
+import {
+  isUserDataLoading,
+  userLoginState
+} from "../../redux/selectors/UserSelectors";
 
 import "./css/login.scss";
+import React, { useEffect } from "react";
+import { currentAccessToken } from "../../redux/selectors/Tokenselectors";
 
-const Login = () => {
+const Login = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
   const loginState = useSelector(userLoginState);
+  const isUserLoading = useSelector(isUserDataLoading);
+  const accessToken = useSelector(currentAccessToken);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      userName: "",
-      password: ""
+      userName: "sergiu",
+      password: "parola"
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Username is required"),
@@ -37,8 +46,14 @@ const Login = () => {
     onSubmit: (userData: UserDataTypes) => dispatch(loginAction(userData))
   });
 
-  const isLoading = loginState === FETCH_STATE.LOADING;
-  const isError = loginState === FETCH_STATE.ERROR;
+  const { LOADING, ERROR, IDLE } = FETCH_STATE;
+  const isError = loginState === ERROR;
+
+  useEffect(() => {
+    if (accessToken) {
+      navigate("/dashboard");
+    }
+  }, [accessToken, navigate]);
 
   return (
     <Container
@@ -55,7 +70,7 @@ const Login = () => {
         isOpen={isError}
         dialogTitle="Error"
         dialogText="Authentication error occured"
-        handleClose={() => dispatch(updateLoginState(FETCH_STATE.IDLE))}
+        handleClose={() => dispatch(updateUserFetchState(IDLE))}
       />
       <Paper
         elevation={3}
@@ -95,11 +110,13 @@ const Login = () => {
               fullWidth
               variant="contained"
               type="submit"
-              disabled={loginState === FETCH_STATE.LOADING}
+              disabled={loginState === LOADING}
               className="submit"
             >
               <span>Login</span>
-              {isLoading && <CircularProgress color="secondary" size={20} />}
+              {isUserLoading && (
+                <CircularProgress color="secondary" size={20} />
+              )}
             </Button>
           </Box>
         </form>
