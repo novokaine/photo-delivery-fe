@@ -6,15 +6,13 @@ const { IDLE } = FETCH_STATE;
 
 const initialState: UserReducerType = {
   loginState: IDLE,
-  registerState: IDLE,
-  isUserLoggedIn: false
+  registerState: IDLE
 };
 
 const UserReducer = createSlice({
   name: "UserReducer",
   initialState,
   reducers: {
-    // Register
     updateRegisterState: (
       nextState,
       { payload }: PayloadAction<FETCH_STATE>
@@ -27,18 +25,11 @@ const UserReducer = createSlice({
       { payload }: PayloadAction<FETCH_STATE>
     ) => {
       nextState.loginState = payload;
-    },
-
-    updateUserLoginState: (nextState, { payload }: PayloadAction<boolean>) => {
-      nextState.isUserLoggedIn = payload;
     }
   }
 });
 
-export const {
-  updateRegisterState,
-  updateUserFetchState,
-  updateUserLoginState
-} = UserReducer.actions;
+export const { updateRegisterState, updateUserFetchState } =
+  UserReducer.actions;
 
 export default UserReducer.reducer;

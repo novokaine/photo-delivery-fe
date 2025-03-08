@@ -8,5 +8,4 @@ export interface UserDataTypes {
 export interface UserReducerType {
   loginState: FETCH_STATE;
   registerState: FETCH_STATE;
-  isUserLoggedIn: boolean;
 }

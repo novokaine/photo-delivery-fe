@@ -14,8 +14,5 @@ export const isUserDataLoading = createSelector(
     userState === LOADING || tokenState === LOADING
 );
 
-export const getUserLoginState = (state: RootState) =>
-  state.UserReducer.isUserLoggedIn;
-
 export const userRegisterState = (state: RootState) =>
   state.UserReducer.registerState;

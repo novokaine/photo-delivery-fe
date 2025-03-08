@@ -1,10 +1,7 @@
 import { AppThunk } from "..";
 import api from "../../api/Api";
 import { FETCH_STATE } from "../../const/Common";
-import {
-  updateUserFetchState,
-  updateUserLoginState
-} from "../reducers/UserReducer";
+import { updateUserFetchState } from "../reducers/UserReducer";
 import { updateAccessToken } from "../reducers/TokenReducers";
 import { updateRegisterState } from "../reducers/UserReducer";
 import { UserDataTypes } from "../Types/UserDataTypes";
@@ -38,7 +35,6 @@ export const loginAction =
       .login({ userName, password })
       .then(({ accessToken }) => {
         dispatch(updateAccessToken(accessToken));
-        dispatch(updateUserLoginState(true));
         dispatch(updateUserFetchState(SUCCESS));
       })
       .catch((err) => {
@@ -52,7 +48,6 @@ export const logoutAction = (): AppThunk => (dispatch) => {
   api
     .logout()
     .then((response) => {
-      dispatch(updateUserLoginState(false));
       dispatch(updateAccessToken(null));
       dispatch(updateUserFetchState(IDLE));
     })
