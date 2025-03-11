@@ -22,6 +22,7 @@ import Login from "./Login";
 // const Login = lazy(() => import("./Login"));
 const Register = lazy(() => import("./Register"));
 const DashBoard = lazy(() => import("./Dashboard"));
+const UserProfile = lazy(() => import("./UserProfile"));
 
 export const routes: RoutesTypes[] = [
   {
@@ -37,6 +38,11 @@ export const routes: RoutesTypes[] = [
   {
     path: "/dashboard",
     Component: DashBoard,
+    isPrivate: true
+  },
+  {
+    path: "/user-profile",
+    Component: UserProfile,
     isPrivate: true
   }
 ];

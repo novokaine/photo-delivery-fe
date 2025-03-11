@@ -12,6 +12,7 @@
     "@types/node": "^22.13.4",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/redux-logger": "^3.0.13",
     "cra-template-redux-typescript": "2.0.0",
     "formik": "^2.4.6",
     "react": "^19.0.0",
@@ -45,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "redux-logger": "^3.0.6"
   }
 }

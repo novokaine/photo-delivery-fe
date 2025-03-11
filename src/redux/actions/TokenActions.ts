@@ -16,6 +16,7 @@ export const getRefreshTokenAction = (): AppThunk => (dispatch) => {
       dispatch(updateTokenFetchState(FETCH_STATE.IDLE));
     })
     .catch(() => {
+      dispatch(updateAccessToken(null));
       dispatch(updateTokenFetchState(FETCH_STATE.ERROR));
     });
 };

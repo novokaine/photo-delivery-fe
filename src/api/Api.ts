@@ -1,4 +1,8 @@
+import { useSelector } from "react-redux";
 import { UserDataTypes } from "../redux/Types/UserDataTypes";
+import { currentAccessToken } from "../redux/selectors/Tokenselectors";
+import publicRoutes from "./apiUtils";
+import { store } from "../redux";
 
 const baseUrl = "http://localhost:8000/api";
 
@@ -10,9 +14,8 @@ const handleResponse = async (response: Response): Promise<any> => {
 const withAuthToken = <T extends (...args: any[]) => Promise<any>>(
   apiMethod: T
 ) => {
+  const token = store.getState().TokenReducer.accessToken;
   return (async (...args: any[]) => {
-    // const token = store.getState().auth.accessToken;
-    const token = "";
     if (!token) throw new Error("No access token available");
 
     return apiMethod(token, ...args);
@@ -133,5 +136,18 @@ const api = {
     return handleResponse(promise);
   }
 };
+
+// const apiMethods = Object.keys(apiMethods).reduce((acc, key) => {
+//   if (!publicRoutes.includes(key)) {
+//     // @ts-ignore
+//     acc[key as keyof typeof apiMethods] = withAuthToken(
+//       apiMethods[key as keyof typeof apiMethods]
+//     );
+//   } else {
+//     // @ts-ignore
+//     acc[key] = apiMethods[key as keyof typeof apiMethods];
+//   }
+//   return acc;
+// }, {} as typeof apiMethods);
 
 export default api;

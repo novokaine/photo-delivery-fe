@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import {
@@ -33,6 +33,7 @@ const Login = (): React.ReactElement => {
   const isUserLoading = useSelector(isUserDataLoading);
   const accessToken = useSelector(currentAccessToken);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const formik = useFormik({
     initialValues: {
@@ -51,9 +52,11 @@ const Login = (): React.ReactElement => {
 
   useEffect(() => {
     if (accessToken) {
-      navigate("/dashboard");
+      const from = location.state?.from || "/dashboard"; // Preserve previous path
+      console.log("from", from);
+      navigate(from, { replace: true });
     }
-  }, [accessToken, navigate]);
+  }, [accessToken, location, navigate]);
 
   return (
     <Container
