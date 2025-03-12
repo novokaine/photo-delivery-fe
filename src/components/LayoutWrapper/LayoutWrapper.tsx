@@ -1,17 +1,23 @@
 import { JSX, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   Box,
+  Button,
   Drawer,
   IconButton,
   List,
   ListItem,
-  ListItemButton,
   ListItemText,
   Toolbar,
   Typography
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import AppBar from "@mui/material/AppBar";
+
+import { routes } from "../../routes";
+import { logoutAction } from "../../redux/actions/UserActions";
+import { AppDispatch } from "../../redux";
 
 import "./css/LayoutWrapper.scss";
 
@@ -23,6 +29,10 @@ interface NavBarProps {
   open: boolean;
   handleDrawerOpenState: () => void;
 }
+
+const internalRoutes = routes.filter(
+  (route) => !["/login", "/register"].includes(route.path)
+);
 
 const drawerWidth = 240;
 
@@ -49,41 +59,51 @@ const NavBar = ({ handleDrawerOpenState, open }: NavBarProps) => (
   </AppBar>
 );
 
-const LeftMenu = ({ open }: { open: boolean }) => (
-  <Drawer
-    sx={{
-      width: drawerWidth,
-      flexShrink: 0,
-      "& .MuiDrawer-paper": {
+const LeftMenu = ({ open }: { open: boolean }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation();
+  const getLinkClassName = ({ path }: { path: string }) =>
+    location.pathname.startsWith(path) ? "active" : "";
+
+  return (
+    <Drawer
+      sx={{
         width: drawerWidth,
-        boxSizing: "border-box"
-      }
-    }}
-    variant="persistent"
-    anchor="left"
-    className="my-drawer"
-    open={open}
-    classes={{
-      root: "drawer-root",
-      paper: "drawer-paper"
-    }}
-  >
-    <List>
-      {["Inbox", "Starred", "Send email", "Drafts"].map((text) => (
-        <ListItem key={text} disablePadding>
-          <ListItemButton>
-            <ListItemText primary={text} />
-          </ListItemButton>
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+          boxSizing: "border-box"
+        }
+      }}
+      variant="persistent"
+      anchor="left"
+      className="my-drawer"
+      open={open}
+      classes={{
+        root: "drawer-root",
+        paper: "drawer-paper"
+      }}
+    >
+      <List>
+        {internalRoutes.map(({ path, name }) => (
+          <ListItem key={path} disablePadding>
+            <Link to={path} className={getLinkClassName({ path })}>
+              <ListItemText primary={name} />
+            </Link>
+          </ListItem>
+        ))}
+        <ListItem>
+          <Button onClick={() => dispatch(logoutAction())}>Logout</Button>
         </ListItem>
-      ))}
-    </List>
-  </Drawer>
-);
+      </List>
+    </Drawer>
+  );
+};
 
 const LayoutWrapper: React.FC<LayoutWrapperType> = ({
   children
 }: LayoutWrapperType): JSX.Element => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
   const handleDrawerOpenState = () => setOpen((prevState) => !prevState);
 
   return (

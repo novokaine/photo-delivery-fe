@@ -38,7 +38,7 @@ const Login = (): React.ReactElement => {
   const formik = useFormik({
     initialValues: {
       userName: "sergiu",
-      password: "parola"
+      password: "someRandomPassword"
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Username is required"),

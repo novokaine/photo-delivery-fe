@@ -38,11 +38,13 @@ export const routes: RoutesTypes[] = [
   {
     path: "/dashboard",
     Component: DashBoard,
+    name: "Dashboard",
     isPrivate: true
   },
   {
     path: "/user-profile",
     Component: UserProfile,
+    name: "Profile",
     isPrivate: true
   }
 ];

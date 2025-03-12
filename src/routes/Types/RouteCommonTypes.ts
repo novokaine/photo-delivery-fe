@@ -6,4 +6,5 @@ export interface RoutesTypes {
     | LazyExoticComponent<() => React.ReactElement>
     | React.ComponentType;
   isPrivate: boolean;
+  name?: string;
 }
