@@ -22,7 +22,7 @@ const PrivateRoute = (props: PrivateRouteProps): JSX.Element => {
     if (!accessToken) dispatch(getRefreshTokenAction());
   }, [accessToken, isUserLoading, dispatch]);
 
-  if (isUserLoading && !accessToken) return <p>Loading</p>;
+  if (isUserLoading) return <p>Loading</p>;
 
   return accessToken ? (
     <LayoutWrapper>{children}</LayoutWrapper>
