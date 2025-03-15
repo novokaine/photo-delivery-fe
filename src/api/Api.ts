@@ -27,7 +27,7 @@ const api = {
     const apiUrl = `${baseUrl}/private${url}`;
     const response = await fetch(apiUrl, {
       mode: "cors",
-      credentials: "same-origin",
+      credentials: "include",
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json"
@@ -42,7 +42,7 @@ const api = {
       method: "POST",
       credentials: "include"
     });
-
+    debugger;
     return handleResponse(refreshToken);
   },
 
@@ -111,7 +111,7 @@ const api = {
   login: async ({
     userName,
     password
-  }: UserDataTypes): Promise<{ accessToken: string }> => {
+  }: UserDataTypes): Promise<{ accessToken: string; isAdmin: boolean }> => {
     const apiUrl = `${baseUrl}/login`;
 
     const requestOptions = {

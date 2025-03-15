@@ -1,7 +1,10 @@
 import { AppThunk } from "..";
 import api from "../../api/Api";
 import { FETCH_STATE } from "../../const/Common";
-import { updateUserFetchState } from "../reducers/UserReducer";
+import {
+  updateUserAdminState,
+  updateUserFetchState
+} from "../reducers/UserReducer";
 import { updateAccessToken } from "../reducers/TokenReducers";
 import { updateRegisterState } from "../reducers/UserReducer";
 import { UserDataTypes } from "../Types/UserDataTypes";
@@ -33,7 +36,9 @@ export const loginAction =
     dispatch(updateUserFetchState(LOADING));
     api
       .login({ userName, password })
-      .then(({ accessToken }) => {
+      .then(({ accessToken, isAdmin }) => {
+        if (isAdmin) dispatch(updateUserAdminState(isAdmin));
+
         dispatch(updateAccessToken(accessToken));
         dispatch(updateUserFetchState(SUCCESS));
       })
@@ -47,9 +52,21 @@ export const logoutAction = (): AppThunk => (dispatch) => {
   dispatch(updateUserFetchState(LOADING));
   api
     .logout()
-    .then((response) => {
+    .then(() => {
       dispatch(updateAccessToken(null));
       dispatch(updateUserFetchState(IDLE));
     })
     .catch(() => dispatch(updateUserFetchState(ERROR)));
+};
+
+export const getUserProfileAction = (): AppThunk => (dispatch, getState) => {
+  dispatch(updateUserFetchState(LOADING));
+  api
+    .get("/user-profile")
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
