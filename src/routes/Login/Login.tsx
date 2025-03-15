@@ -53,7 +53,6 @@ const Login = (): React.ReactElement => {
   useEffect(() => {
     if (accessToken) {
       const from = location.state?.from || "/dashboard"; // Preserve previous path
-      console.log("from", from);
       navigate(from, { replace: true });
     }
   }, [accessToken, location, navigate]);

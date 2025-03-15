@@ -1,8 +1,5 @@
-import { useSelector } from "react-redux";
 import { UserDataTypes } from "../redux/Types/UserDataTypes";
-import { currentAccessToken } from "../redux/selectors/Tokenselectors";
-import publicRoutes from "./apiUtils";
-import { store } from "../redux";
+// import { store } from "../redux";
 
 const baseUrl = "http://localhost:8000/api";
 
@@ -11,16 +8,16 @@ const handleResponse = async (response: Response): Promise<any> => {
   throw new Error("Cannot fetch data");
 };
 
-const withAuthToken = <T extends (...args: any[]) => Promise<any>>(
-  apiMethod: T
-) => {
-  const token = store.getState().TokenReducer.accessToken;
-  return (async (...args: any[]) => {
-    if (!token) throw new Error("No access token available");
+// const withAuthToken = <T extends (...args: any[]) => Promise<any>>(
+//   apiMethod: T
+// ) => {
+//   const token = store.getState().TokenReducer.accessToken;
+//   return (async (...args: any[]) => {
+//     if (!token) throw new Error("No access token available");
 
-    return apiMethod(token, ...args);
-  }) as T;
-};
+//     return apiMethod(token, ...args);
+//   }) as T;
+// };
 
 const api = {
   get: async (url: string) => {
@@ -42,7 +39,7 @@ const api = {
       method: "POST",
       credentials: "include"
     });
-    debugger;
+
     return handleResponse(refreshToken);
   },
 
