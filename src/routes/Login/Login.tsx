@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
@@ -16,16 +17,14 @@ import { FETCH_STATE } from "../../const/Common";
 import DialogModal from "../../components/DialogModal";
 import { updateUserFetchState } from "../../redux/reducers/UserReducer";
 import { UserDataTypes } from "../../redux/Types/UserDataTypes";
-
 import { loginAction } from "../../redux/actions/UserActions";
 import {
   isUserDataLoading,
   userLoginState
 } from "../../redux/selectors/UserSelectors";
+import { currentAccessToken } from "../../redux/selectors/Tokenselectors";
 
 import "./css/login.scss";
-import React, { useEffect } from "react";
-import { currentAccessToken } from "../../redux/selectors/Tokenselectors";
 
 const Login = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();

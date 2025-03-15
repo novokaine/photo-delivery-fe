@@ -4,3 +4,5 @@ export enum FETCH_STATE {
   IDLE = "idle",
   SUCCESS = "success"
 }
+
+export const { LOADING, ERROR, IDLE, SUCCESS } = FETCH_STATE;
