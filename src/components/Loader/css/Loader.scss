@@ -1,0 +1,12 @@
+.MuiCircularProgress-root {
+  outline: none;
+  svg {
+    color: #fff;
+  }
+}
+
+.loader-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

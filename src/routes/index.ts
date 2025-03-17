@@ -23,18 +23,9 @@ import Login from "./Login";
 const Register = lazy(() => import("./Register"));
 const DashBoard = lazy(() => import("./Dashboard"));
 const UserProfile = lazy(() => import("./UserProfile"));
+const ResetPassword = lazy(() => import("./ResetPasswrd"));
 
-export const routes: RoutesTypes[] = [
-  {
-    path: "/login",
-    Component: Login,
-    isPrivate: false
-  },
-  {
-    path: "/register",
-    Component: Register,
-    isPrivate: false
-  },
+const privateRoutes: RoutesTypes[] = [
   {
     path: "/dashboard",
     Component: DashBoard,
@@ -48,3 +39,23 @@ export const routes: RoutesTypes[] = [
     isPrivate: true
   }
 ];
+
+const publicRoutes: RoutesTypes[] = [
+  {
+    path: "/login",
+    Component: Login,
+    isPrivate: false
+  },
+  {
+    path: "/register",
+    Component: Register,
+    isPrivate: false
+  },
+  {
+    path: "/reset-password",
+    Component: ResetPassword,
+    isPrivate: false
+  }
+];
+
+export const routes: RoutesTypes[] = [...privateRoutes, ...publicRoutes];

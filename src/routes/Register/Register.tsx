@@ -9,6 +9,7 @@ import {
   Button,
   CircularProgress,
   Container,
+  Link,
   Paper,
   TextField,
   Typography
@@ -131,6 +132,11 @@ const Register = () => {
             </Button>
           </Box>
         </form>
+        <Box mt={2}>
+          <Link href="/login" underline="hover">
+            Back
+          </Link>
+        </Box>
       </Paper>
     </Container>
   );

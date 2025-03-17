@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { routes } from "./routes";
 import PrivateRoute from "./routes/PrivateRoute";
+import Loader from "./components/Loader";
 
 const getRoutes = routes.map(({ isPrivate, path, Component }) => (
   <Route
@@ -21,7 +22,7 @@ const getRoutes = routes.map(({ isPrivate, path, Component }) => (
 
 const App = () => (
   <Router>
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<Loader />}>
       <Routes>{getRoutes}</Routes>
     </Suspense>
   </Router>

@@ -6,6 +6,7 @@ import { getRefreshTokenAction } from "../../redux/actions/TokenActions";
 import { currentAccessToken } from "../../redux/selectors/Tokenselectors";
 import { isUserDataLoading } from "../../redux/selectors/UserSelectors";
 import LayoutWrapper from "../../components/LayoutWrapper";
+import Loader from "../../components/Loader";
 
 interface PrivateRouteProps {
   children?: React.ReactNode;
@@ -22,7 +23,7 @@ const PrivateRoute = (props: PrivateRouteProps): JSX.Element => {
     if (!accessToken) dispatch(getRefreshTokenAction());
   }, [accessToken, isUserLoading, dispatch]);
 
-  if (isUserLoading) return <p>Loading</p>;
+  if (isUserLoading) return <Loader />;
 
   return accessToken ? (
     <LayoutWrapper>{children}</LayoutWrapper>

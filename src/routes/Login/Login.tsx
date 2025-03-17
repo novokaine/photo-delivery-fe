@@ -8,7 +8,9 @@ import {
   CircularProgress,
   Container,
   Paper,
-  Typography
+  Stack,
+  Typography,
+  Link
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -121,6 +123,16 @@ const Login = (): React.ReactElement => {
             </Button>
           </Box>
         </form>
+        <Box mt={2} alignContent="end">
+          <Stack spacing={5} direction="row" justifyContent="flex-end">
+            <Link href="/register" underline="hover">
+              Register
+            </Link>
+            <Link href="/reset-password" underline="hover">
+              Forgot password?
+            </Link>
+          </Stack>
+        </Box>
       </Paper>
     </Container>
   );
