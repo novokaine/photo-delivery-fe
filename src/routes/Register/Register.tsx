@@ -37,6 +37,7 @@ const Register = () => {
       retypePassword: ""
     },
     validationSchema: Yup.object({
+      email: Yup.string().email().required("Email is required"),
       userName: Yup.string().required("Username is required"),
       password: Yup.string()
         .required("Password is required")
@@ -76,6 +77,17 @@ const Register = () => {
           Register
         </Typography>
         <form onSubmit={formik.handleSubmit}>
+          <TextField
+            fullWidth
+            id="email"
+            label="Please enter your email address"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+            margin="normal"
+            autoComplete="off"
+          />
           <TextField
             fullWidth
             id="userName"

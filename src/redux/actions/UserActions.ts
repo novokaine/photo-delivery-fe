@@ -2,17 +2,18 @@ import { AppThunk } from "..";
 import api from "../../api/Api";
 import { FETCH_STATE } from "../../const/Common";
 import {
-  updateUserAdminState,
-  updateUserFetchState
+  updateUserFetchState,
+  updateUserProfile
 } from "../reducers/UserReducer";
 import { updateAccessToken } from "../reducers/TokenReducers";
 import { updateRegisterState } from "../reducers/UserReducer";
 import { UserDataTypes } from "../Types/UserDataTypes";
+import { userFetchState } from "../selectors/UserSelectors";
 
 const { LOADING, SUCCESS, IDLE, ERROR } = FETCH_STATE;
 
 export const registerAction =
-  ({ userName, password }: UserDataTypes): AppThunk =>
+  ({ email, userName, password }: UserDataTypes): AppThunk =>
   (dispatch) => {
     if (!userName || !password) {
       return;
@@ -21,7 +22,7 @@ export const registerAction =
     dispatch(updateRegisterState(LOADING));
 
     api
-      .register({ userName, password })
+      .register({ email, userName, password })
       .then(() => {
         dispatch(updateRegisterState(SUCCESS));
       })
@@ -36,13 +37,12 @@ export const loginAction =
     dispatch(updateUserFetchState(LOADING));
     api
       .login({ userName, password })
-      .then(({ accessToken, isAdmin }) => {
-        if (isAdmin) dispatch(updateUserAdminState(isAdmin));
-
+      .then(({ accessToken }) => {
         dispatch(updateAccessToken(accessToken));
         dispatch(updateUserFetchState(SUCCESS));
       })
-      .catch((err) => {
+      .then(() => dispatch(getUserProfileAction()))
+      .catch(() => {
         dispatch(updateAccessToken(null));
         dispatch(updateUserFetchState(ERROR));
       });
@@ -60,13 +60,18 @@ export const logoutAction = (): AppThunk => (dispatch) => {
 };
 
 export const getUserProfileAction = (): AppThunk => (dispatch, getState) => {
+  const userState = userFetchState(getState());
+
+  if (userState === LOADING) return;
   dispatch(updateUserFetchState(LOADING));
+
   api
     .get("/user-profile")
-    .then((response) => {
-      console.log(response);
+    .then(({ message: { username, isAdmin } }) => {
+      dispatch(updateUserProfile({ username, isAdmin }));
+      dispatch(updateUserFetchState(IDLE));
     })
     .catch((err) => {
-      console.log(err);
+      dispatch(updateUserFetchState(ERROR));
     });
 };

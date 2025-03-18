@@ -1,23 +1,15 @@
 import { UserDataTypes } from "../redux/Types/UserDataTypes";
-// import { store } from "../redux";
 
 const baseUrl = "http://localhost:8000/api";
 
 const handleResponse = async (response: Response): Promise<any> => {
-  if (response.status !== 204) return await response.json();
+  if (response.status !== 204) {
+    const result = await response.json();
+    return result;
+  }
+
   throw new Error("Cannot fetch data");
 };
-
-// const withAuthToken = <T extends (...args: any[]) => Promise<any>>(
-//   apiMethod: T
-// ) => {
-//   const token = store.getState().TokenReducer.accessToken;
-//   return (async (...args: any[]) => {
-//     if (!token) throw new Error("No access token available");
-
-//     return apiMethod(token, ...args);
-//   }) as T;
-// };
 
 const api = {
   get: async (url: string) => {
@@ -31,7 +23,7 @@ const api = {
       }
     });
 
-    handleResponse(response);
+    return handleResponse(response);
   },
 
   getRefreshToken: async () => {
@@ -87,14 +79,18 @@ const api = {
     handleResponse(response);
   },
 
-  register: async ({ userName, password }: UserDataTypes): Promise<any> => {
+  register: async ({
+    email,
+    userName,
+    password
+  }: UserDataTypes): Promise<any> => {
     const apiUrl = `${baseUrl}/register`;
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-type": "application/json"
       },
-      body: JSON.stringify({ username: userName, password })
+      body: JSON.stringify({ email, username: userName, password })
     };
     const promise = await fetch(apiUrl, requestOptions);
 
@@ -108,7 +104,7 @@ const api = {
   login: async ({
     userName,
     password
-  }: UserDataTypes): Promise<{ accessToken: string; isAdmin: boolean }> => {
+  }: UserDataTypes): Promise<{ accessToken: string }> => {
     const apiUrl = `${baseUrl}/login`;
 
     const requestOptions = {
@@ -133,18 +129,5 @@ const api = {
     return handleResponse(promise);
   }
 };
-
-// const apiMethods = Object.keys(apiMethods).reduce((acc, key) => {
-//   if (!publicRoutes.includes(key)) {
-//     // @ts-ignore
-//     acc[key as keyof typeof apiMethods] = withAuthToken(
-//       apiMethods[key as keyof typeof apiMethods]
-//     );
-//   } else {
-//     // @ts-ignore
-//     acc[key] = apiMethods[key as keyof typeof apiMethods];
-//   }
-//   return acc;
-// }, {} as typeof apiMethods);
 
 export default api;

@@ -1,6 +1,6 @@
 import { JSX, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   Button,
@@ -18,6 +18,7 @@ import AppBar from "@mui/material/AppBar";
 import { routes } from "../../routes";
 import { logoutAction } from "../../redux/actions/UserActions";
 import { AppDispatch } from "../../redux";
+import { currentUserProfile } from "../../redux/selectors/UserSelectors";
 
 import "./css/LayoutWrapper.scss";
 
@@ -36,28 +37,32 @@ const internalRoutes = routes.filter(
 
 const drawerWidth = 240;
 
-const NavBar = ({ handleDrawerOpenState, open }: NavBarProps) => (
-  <AppBar position="fixed">
-    <Toolbar>
-      <IconButton
-        color="inherit"
-        aria-label="open drawer"
-        onClick={handleDrawerOpenState}
-        edge="start"
-        sx={[
-          {
-            mr: 2
-          }
-        ]}
-      >
-        {open ? <ChevronLeft /> : <ChevronRight />}
-      </IconButton>
-      <Typography variant="h6" noWrap component="div">
-        Welcome user
-      </Typography>
-    </Toolbar>
-  </AppBar>
-);
+const NavBar = ({ handleDrawerOpenState, open }: NavBarProps) => {
+  const userData = useSelector(currentUserProfile);
+
+  return (
+    <AppBar position="fixed">
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerOpenState}
+          edge="start"
+          sx={[
+            {
+              mr: 2
+            }
+          ]}
+        >
+          {open ? <ChevronLeft /> : <ChevronRight />}
+        </IconButton>
+        <Typography variant="h6" noWrap component="div">
+          Welcome {userData?.username}
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  );
+};
 
 const LeftMenu = ({ open }: { open: boolean }) => {
   const dispatch = useDispatch<AppDispatch>();

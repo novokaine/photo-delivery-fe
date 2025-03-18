@@ -5,9 +5,9 @@ import { UserReducerType } from "../Types/UserDataTypes";
 const { IDLE } = FETCH_STATE;
 
 const initialState: UserReducerType = {
-  loginState: IDLE,
+  userFetchState: IDLE,
   registerState: IDLE,
-  isAdmin: false
+  userProfile: null
 };
 
 const UserReducer = createSlice({
@@ -25,18 +25,19 @@ const UserReducer = createSlice({
       nextState,
       { payload }: PayloadAction<FETCH_STATE>
     ) => {
-      nextState.loginState = payload;
+      nextState.userFetchState = payload;
     },
-    updateUserAdminState: (nextState, { payload }: PayloadAction<boolean>) => {
-      nextState.isAdmin = payload;
+
+    updateUserProfile: (
+      nextState,
+      { payload }: PayloadAction<UserReducerType["userProfile"]>
+    ) => {
+      nextState.userProfile = payload;
     }
   }
 });
 
-export const {
-  updateRegisterState,
-  updateUserFetchState,
-  updateUserAdminState
-} = UserReducer.actions;
+export const { updateRegisterState, updateUserFetchState, updateUserProfile } =
+  UserReducer.actions;
 
 export default UserReducer.reducer;

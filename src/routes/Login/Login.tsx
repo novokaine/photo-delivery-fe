@@ -22,7 +22,7 @@ import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { loginAction } from "../../redux/actions/UserActions";
 import {
   isUserDataLoading,
-  userLoginState
+  userFetchState
 } from "../../redux/selectors/UserSelectors";
 import { currentAccessToken } from "../../redux/selectors/Tokenselectors";
 
@@ -30,7 +30,7 @@ import "./css/login.scss";
 
 const Login = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
-  const loginState = useSelector(userLoginState);
+  const loginState = useSelector(userFetchState);
   const isUserLoading = useSelector(isUserDataLoading);
   const accessToken = useSelector(currentAccessToken);
   const navigate = useNavigate();

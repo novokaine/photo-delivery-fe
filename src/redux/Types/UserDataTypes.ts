@@ -8,7 +8,10 @@ export interface UserDataTypes {
 }
 
 export interface UserReducerType {
-  loginState: FETCH_STATE;
+  userFetchState: FETCH_STATE;
   registerState: FETCH_STATE;
-  isAdmin: boolean;
+  userProfile: {
+    username: string | null;
+    isAdmin: boolean;
+  } | null;
 }
