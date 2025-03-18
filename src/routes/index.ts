@@ -24,6 +24,7 @@ const Register = lazy(() => import("./Register"));
 const DashBoard = lazy(() => import("./Dashboard"));
 const UserProfile = lazy(() => import("./UserProfile"));
 const ResetPassword = lazy(() => import("./ResetPasswrd"));
+const PhotoUpload = lazy(() => import("./PhotoUpload"));
 
 const privateRoutes: RoutesTypes[] = [
   {
@@ -58,6 +59,16 @@ const publicRoutes: RoutesTypes[] = [
     Component: ResetPassword,
     name: "Reset Password",
     isPrivate: false
+  }
+];
+
+export const adminRoutes: RoutesTypes[] = [
+  {
+    path: "/upload-photos",
+    Component: PhotoUpload,
+    name: "Photo Upload",
+    isPrivate: true,
+    requiresAdmin: true
   }
 ];
 

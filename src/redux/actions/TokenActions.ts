@@ -1,22 +1,22 @@
 import { AppThunk } from "..";
 import api from "../../api/Api";
-import { FETCH_STATE } from "../../const/Common";
+import { ERROR, IDLE, LOADING } from "../../const/Common";
 import {
   updateAccessToken,
   updateTokenFetchState
 } from "../reducers/TokenReducers";
 
 export const getRefreshTokenAction = (): AppThunk => (dispatch) => {
-  dispatch(updateTokenFetchState(FETCH_STATE.LOADING));
+  dispatch(updateTokenFetchState(LOADING));
 
   api
     .getRefreshToken()
     .then(({ accessToken }: { accessToken: string }) => {
       dispatch(updateAccessToken(accessToken));
-      dispatch(updateTokenFetchState(FETCH_STATE.IDLE));
+      dispatch(updateTokenFetchState(IDLE));
     })
     .catch(() => {
       dispatch(updateAccessToken(null));
-      dispatch(updateTokenFetchState(FETCH_STATE.ERROR));
+      dispatch(updateTokenFetchState(ERROR));
     });
 };

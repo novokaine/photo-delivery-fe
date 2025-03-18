@@ -75,11 +75,7 @@ const Login = (): React.ReactElement => {
         dialogText="Authentication error occured"
         handleClose={() => dispatch(updateUserFetchState(IDLE))}
       />
-      <Paper
-        elevation={3}
-        sx={{ padding: 3, width: "100%" }}
-        className="paper-form"
-      >
+      <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
         <Typography variant="h5" align="center" gutterBottom>
           Login
         </Typography>

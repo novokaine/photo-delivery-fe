@@ -16,8 +16,9 @@ interface PrivateRouteProps {
   children?: React.ReactNode;
 }
 
-const PrivateRoute = (props: PrivateRouteProps): JSX.Element => {
-  const { children } = props;
+const PrivateRoute: React.FC<PrivateRouteProps> = ({
+  children
+}): JSX.Element => {
   const accessToken = useSelector(currentAccessToken);
   const isUserLoading = useSelector(isUserDataLoading);
   const userProfile = useSelector(currentUserProfile);

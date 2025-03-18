@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import AppBar from "@mui/material/AppBar";
-
 import { routes } from "../../routes";
 import { logoutAction } from "../../redux/actions/UserActions";
 import { AppDispatch } from "../../redux";
@@ -30,14 +29,16 @@ interface NavBarProps {
   open: boolean;
   handleDrawerOpenState: () => void;
 }
-
 const internalRoutes = routes.filter(
   (route) => !["/login", "/register"].includes(route.path)
 );
 
 const drawerWidth = 240;
 
-const NavBar = ({ handleDrawerOpenState, open }: NavBarProps) => {
+const NavBar: React.FC<NavBarProps> = ({
+  handleDrawerOpenState,
+  open
+}): JSX.Element => {
   const userData = useSelector(currentUserProfile);
 
   return (
@@ -64,7 +65,7 @@ const NavBar = ({ handleDrawerOpenState, open }: NavBarProps) => {
   );
 };
 
-const LeftMenu = ({ open }: { open: boolean }) => {
+const LeftMenu: React.FC<{ open: boolean }> = ({ open }): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
   const getLinkClassName = ({ path }: { path: string }) =>
@@ -109,7 +110,7 @@ const LeftMenu = ({ open }: { open: boolean }) => {
 
 const LayoutWrapper: React.FC<LayoutWrapperType> = ({
   children
-}: LayoutWrapperType): JSX.Element => {
+}): JSX.Element => {
   const [open, setOpen] = useState<boolean>(true);
   const handleDrawerOpenState = () => setOpen((prevState) => !prevState);
 

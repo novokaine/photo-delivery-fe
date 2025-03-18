@@ -71,7 +71,7 @@ export const getUserProfileAction = (): AppThunk => (dispatch, getState) => {
       dispatch(updateUserProfile({ username, isAdmin }));
       dispatch(updateUserFetchState(IDLE));
     })
-    .catch((err) => {
+    .catch(() => {
       dispatch(updateUserFetchState(ERROR));
     });
 };
