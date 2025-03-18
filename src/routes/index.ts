@@ -44,16 +44,19 @@ const publicRoutes: RoutesTypes[] = [
   {
     path: "/login",
     Component: Login,
+    name: "Login",
     isPrivate: false
   },
   {
     path: "/register",
     Component: Register,
+    name: "Register",
     isPrivate: false
   },
   {
     path: "/reset-password",
     Component: ResetPassword,
+    name: "Reset Password",
     isPrivate: false
   }
 ];

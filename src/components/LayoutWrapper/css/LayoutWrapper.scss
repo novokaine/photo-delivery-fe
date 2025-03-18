@@ -6,6 +6,19 @@
   }
 }
 
+.user-menu {
+  a,
+  button {
+    text-transform: none;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    color: #1976d2;
+    font-size: 1rem;
+  }
+}
+
 .main-wrapper {
   margin-top: 50px;
   transition: margin 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;

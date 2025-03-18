@@ -82,19 +82,21 @@ const LeftMenu = ({ open }: { open: boolean }) => {
       }}
       variant="persistent"
       anchor="left"
-      className="my-drawer"
+      className="menu-drawer"
       open={open}
       classes={{
         root: "drawer-root",
         paper: "drawer-paper"
       }}
     >
-      <List>
+      <List className="user-menu">
         {internalRoutes.map(({ path, name }) => (
           <ListItem key={path} disablePadding>
-            <Link to={path} className={getLinkClassName({ path })}>
-              <ListItemText primary={name} />
-            </Link>
+            <Button>
+              <Link to={path} className={getLinkClassName({ path })}>
+                <ListItemText primary={name} />
+              </Link>
+            </Button>
           </ListItem>
         ))}
         <ListItem>
