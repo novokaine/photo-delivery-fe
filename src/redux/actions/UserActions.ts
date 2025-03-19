@@ -1,6 +1,6 @@
 import { AppThunk } from "..";
 import api from "../../api/Api";
-import { FETCH_STATE } from "../../const/Common";
+import { IDLE, LOADING, SUCCESS, ERROR } from "../../const/Common";
 import {
   updateUserFetchState,
   updateUserProfile
@@ -9,8 +9,6 @@ import { updateAccessToken } from "../reducers/TokenReducers";
 import { updateRegisterState } from "../reducers/UserReducer";
 import { UserDataTypes } from "../Types/UserDataTypes";
 import { userFetchState } from "../selectors/UserSelectors";
-
-const { LOADING, SUCCESS, IDLE, ERROR } = FETCH_STATE;
 
 export const registerAction =
   ({ email, userName, password }: UserDataTypes): AppThunk =>
@@ -71,7 +69,7 @@ export const getUserProfileAction = (): AppThunk => (dispatch, getState) => {
       dispatch(updateUserProfile({ username, isAdmin }));
       dispatch(updateUserFetchState(IDLE));
     })
-    .catch((err) => {
+    .catch(() => {
       dispatch(updateUserFetchState(ERROR));
     });
 };

@@ -9,12 +9,12 @@ export const userFetchState = (state: RootState): FETCH_STATE =>
   state.UserReducer.userFetchState;
 
 export const isUserDataLoading = createSelector(
-  [userFetchState, getTokenFetchState],
+  [({ UserReducer: { userFetchState } }) => userFetchState, getTokenFetchState],
   (userState, tokenState): boolean =>
     userState === LOADING || tokenState === LOADING
 );
 
-export const userRegisterState = (state: RootState) =>
+export const userRegisterState = (state: RootState): FETCH_STATE =>
   state.UserReducer.registerState;
 
 export const currentUserProfile = (state: RootState) =>

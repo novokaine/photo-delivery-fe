@@ -1,11 +1,15 @@
-.MuiButtonBase-root.submit {
-  span {
+.login-wrapper {
+  .submit {
     margin-right: 10px;
   }
-}
 
-.MuiCircularProgress-root {
-  svg {
+  .spinner {
     color: #fff;
+  }
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }

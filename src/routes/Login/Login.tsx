@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import {
@@ -15,11 +14,12 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AppDispatch } from "../../redux";
-import { FETCH_STATE } from "../../const/Common";
+import { ERROR, IDLE, LOADING } from "../../const/Common";
 import DialogModal from "../../components/DialogModal";
 import { updateUserFetchState } from "../../redux/reducers/UserReducer";
 import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { loginAction } from "../../redux/actions/UserActions";
+import { DASHBOARD, PASSWORD_RESET, REGISTER } from "..";
 import {
   isUserDataLoading,
   userFetchState
@@ -33,10 +33,9 @@ const Login = (): React.ReactElement => {
   const loginState = useSelector(userFetchState);
   const isUserLoading = useSelector(isUserDataLoading);
   const accessToken = useSelector(currentAccessToken);
-  const navigate = useNavigate();
   const location = useLocation();
 
-  const formik = useFormik({
+  const formik = useFormik<UserDataTypes>({
     initialValues: {
       userName: "sergiu",
       password: "someRandomPassword"
@@ -48,19 +47,17 @@ const Login = (): React.ReactElement => {
     onSubmit: (userData: UserDataTypes) => dispatch(loginAction(userData))
   });
 
-  const { LOADING, ERROR, IDLE } = FETCH_STATE;
   const isError = loginState === ERROR;
 
-  useEffect(() => {
-    if (accessToken) {
-      const from = location.state?.from || "/dashboard"; // Preserve previous path
-      navigate(from, { replace: true });
-    }
-  }, [accessToken, location, navigate]);
+  if (accessToken) {
+    const from = location.state?.from || DASHBOARD;
+    return <Navigate to={from} replace />;
+  }
 
   return (
     <Container
       component={"main"}
+      className="login-wrapper"
       maxWidth={"xs"}
       sx={{
         display: "flex",
@@ -75,11 +72,7 @@ const Login = (): React.ReactElement => {
         dialogText="Authentication error occured"
         handleClose={() => dispatch(updateUserFetchState(IDLE))}
       />
-      <Paper
-        elevation={3}
-        sx={{ padding: 3, width: "100%" }}
-        className="paper-form"
-      >
+      <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
         <Typography variant="h5" align="center" gutterBottom>
           Login
         </Typography>
@@ -118,19 +111,15 @@ const Login = (): React.ReactElement => {
             >
               <span>Login</span>
               {isUserLoading && (
-                <CircularProgress color="secondary" size={20} />
+                <CircularProgress className="spinner" size={20} />
               )}
             </Button>
           </Box>
         </form>
         <Box mt={2} alignContent="end">
           <Stack spacing={5} direction="row" justifyContent="flex-end">
-            <Link href="/register" underline="hover">
-              Register
-            </Link>
-            <Link href="/reset-password" underline="hover">
-              Forgot password?
-            </Link>
+            <Link href={REGISTER}>Register</Link>
+            <Link href={PASSWORD_RESET}>Forgot password?</Link>
           </Stack>
         </Box>
       </Paper>

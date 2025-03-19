@@ -3,12 +3,9 @@ import { UserDataTypes } from "../redux/Types/UserDataTypes";
 const baseUrl = "http://localhost:8000/api";
 
 const handleResponse = async (response: Response): Promise<any> => {
-  if (response.status !== 204) {
-    const result = await response.json();
-    return result;
-  }
+  if (!response.ok) throw new Error("Cannot fetch data");
 
-  throw new Error("Cannot fetch data");
+  return await response.json();
 };
 
 const api = {

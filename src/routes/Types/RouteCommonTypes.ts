@@ -6,5 +6,6 @@ export interface RoutesTypes {
     | LazyExoticComponent<() => React.ReactElement>
     | React.ComponentType;
   isPrivate: boolean;
+  requiresAdmin?: boolean;
   name?: string;
 }
