@@ -15,7 +15,7 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { AppDispatch } from "../../redux";
-import { FETCH_STATE } from "../../const/Common";
+import { ERROR, IDLE, LOADING } from "../../const/Common";
 import DialogModal from "../../components/DialogModal";
 import { updateUserFetchState } from "../../redux/reducers/UserReducer";
 import { UserDataTypes } from "../../redux/Types/UserDataTypes";
@@ -48,7 +48,6 @@ const Login = (): React.ReactElement => {
     onSubmit: (userData: UserDataTypes) => dispatch(loginAction(userData))
   });
 
-  const { LOADING, ERROR, IDLE } = FETCH_STATE;
   const isError = loginState === ERROR;
 
   useEffect(() => {
