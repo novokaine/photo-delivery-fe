@@ -2,6 +2,24 @@ import { lazy } from "react";
 import { RoutesTypes } from "./Types/RouteCommonTypes";
 import Login from "./Login";
 
+const ROUTES_PATH = {
+  DASHBOARD: "/dashboard",
+  USER_PROFILE: "/user-profile",
+  LOGIN: "/login",
+  REGISTER: "/register",
+  PASSWORD_RESET: "/reset-password",
+  UPLOAD_PHOTOS: "/upload-photos"
+};
+
+export const {
+  DASHBOARD,
+  USER_PROFILE,
+  LOGIN,
+  REGISTER,
+  PASSWORD_RESET,
+  UPLOAD_PHOTOS
+} = ROUTES_PATH;
+
 // export const routes = {
 //   home: "/",
 //   login: "/login",
@@ -28,13 +46,13 @@ const PhotoUpload = lazy(() => import("./PhotoUpload"));
 
 const privateRoutes: RoutesTypes[] = [
   {
-    path: "/dashboard",
+    path: DASHBOARD,
     Component: DashBoard,
     name: "Dashboard",
     isPrivate: true
   },
   {
-    path: "/user-profile",
+    path: USER_PROFILE,
     Component: UserProfile,
     name: "Profile",
     isPrivate: true
@@ -43,19 +61,19 @@ const privateRoutes: RoutesTypes[] = [
 
 const publicRoutes: RoutesTypes[] = [
   {
-    path: "/login",
+    path: LOGIN,
     Component: Login,
     name: "Login",
     isPrivate: false
   },
   {
-    path: "/register",
+    path: REGISTER,
     Component: Register,
     name: "Register",
     isPrivate: false
   },
   {
-    path: "/reset-password",
+    path: PASSWORD_RESET,
     Component: ResetPassword,
     name: "Reset Password",
     isPrivate: false
@@ -64,7 +82,7 @@ const publicRoutes: RoutesTypes[] = [
 
 export const adminRoutes: RoutesTypes[] = [
   {
-    path: "/upload-photos",
+    path: UPLOAD_PHOTOS,
     Component: PhotoUpload,
     name: "Photo Upload",
     isPrivate: true,
@@ -73,3 +91,7 @@ export const adminRoutes: RoutesTypes[] = [
 ];
 
 export const routes: RoutesTypes[] = [...privateRoutes, ...publicRoutes];
+
+export const internalRoutes = routes.filter(
+  (route) => ![LOGIN, REGISTER].includes(route.path)
+);

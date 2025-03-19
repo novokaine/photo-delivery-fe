@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { AppDispatch } from "../../redux";
-
 import {
   Box,
   Button,
@@ -18,7 +18,7 @@ import { registerAction } from "../../redux/actions/UserActions";
 import { userRegisterState } from "../../redux/selectors/UserSelectors";
 import { ERROR, LOADING } from "../../const/Common";
 import DialogModal from "../../components/DialogModal";
-import { useEffect, useState } from "react";
+import { LOGIN } from "..";
 
 const Register = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -145,7 +145,7 @@ const Register = () => {
           </Box>
         </form>
         <Box mt={2}>
-          <Link href="/login" underline="hover">
+          <Link href={LOGIN} underline="hover">
             Back
           </Link>
         </Box>

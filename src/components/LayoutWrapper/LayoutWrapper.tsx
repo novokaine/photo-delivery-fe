@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import AppBar from "@mui/material/AppBar";
-import { routes } from "../../routes";
+import { internalRoutes } from "../../routes";
 import { logoutAction } from "../../redux/actions/UserActions";
 import { AppDispatch } from "../../redux";
 import { currentUserProfile } from "../../redux/selectors/UserSelectors";
@@ -29,9 +29,6 @@ interface NavBarProps {
   open: boolean;
   handleDrawerOpenState: () => void;
 }
-const internalRoutes = routes.filter(
-  (route) => !["/login", "/register"].includes(route.path)
-);
 
 const drawerWidth = 240;
 
