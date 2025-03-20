@@ -7,7 +7,7 @@ import Loader from "../../components/Loader";
 import { LOGIN } from "..";
 
 interface PrivateRouteProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({

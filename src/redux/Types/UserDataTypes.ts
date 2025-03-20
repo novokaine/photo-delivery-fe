@@ -7,11 +7,13 @@ export interface UserDataTypes {
   retypePassword?: string;
 }
 
+export type UserProfileType = {
+  username: string | null;
+  isAdmin: boolean;
+} | null;
+
 export interface UserReducerType {
   userFetchState: FETCH_STATE;
   registerState: FETCH_STATE;
-  userProfile: {
-    username: string | null;
-    isAdmin: boolean;
-  } | null;
+  userProfile: UserProfileType;
 }

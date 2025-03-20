@@ -59,7 +59,7 @@ const privateRoutes: RoutesTypes[] = [
   }
 ];
 
-const publicRoutes: RoutesTypes[] = [
+export const publicRoutes: RoutesTypes[] = [
   {
     path: LOGIN,
     Component: Login,
