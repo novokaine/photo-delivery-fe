@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import {
@@ -8,8 +8,7 @@ import {
   Container,
   Paper,
   Stack,
-  Typography,
-  Link
+  Typography
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -118,8 +117,8 @@ const Login = (): React.ReactElement => {
         </form>
         <Box mt={2} alignContent="end">
           <Stack spacing={5} direction="row" justifyContent="flex-end">
-            <Link href={REGISTER}>Register</Link>
-            <Link href={PASSWORD_RESET}>Forgot password?</Link>
+            <Link to={REGISTER}>Register</Link>
+            <Link to={PASSWORD_RESET}>Forgot password?</Link>
           </Stack>
         </Box>
       </Paper>

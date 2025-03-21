@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Box,
   Button,
@@ -60,10 +61,18 @@ const ResetPassword = () => {
           )}
         </Button>
       </Box>
+      <Box mt={2}>
+        <Link to="/">Back</Link>
+      </Box>
     </form>
   );
 
-  const successMsg = <p>You will receive an e-mail with reset password link</p>;
+  const successMsg = (
+    <>
+      <p>You will receive an e-mail with reset password link</p>
+      <Link to="/">Login</Link>
+    </>
+  );
 
   return (
     <Container
