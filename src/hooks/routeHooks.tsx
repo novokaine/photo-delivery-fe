@@ -1,9 +1,12 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, Route, useLocation } from "react-router-dom";
 import { Button, ListItem, ListItemText } from "@mui/material";
 import { RoutesTypes } from "../routes/Types/RouteCommonTypes";
-import { currentUserProfile } from "../redux/selectors/UserSelectors";
+import {
+  currentUserProfile,
+  isUserDataLoading
+} from "../redux/selectors/UserSelectors";
 import {
   adminRoutes,
   internalRoutes,
@@ -36,25 +39,30 @@ const useGetUpdatedRoutes = ({
   accessToken: string | null;
 }): RoutesTypes[] => {
   const userProfile = useSelector(currentUserProfile);
+  const isUserLoading = useSelector(isUserDataLoading);
+  const [routes, setRoutes] = useState<RoutesTypes[]>(publicRoutes);
 
-  const availableRoutes = useMemo(() => {
-    if (!accessToken) return publicRoutes;
+  useEffect(() => {
+    if (!accessToken || isUserLoading) {
+      setRoutes(publicRoutes);
+      return;
+    }
 
     const isAdmin = userProfile?.isAdmin;
     const resetPasswordRoute = publicRoutes.find(
       ({ path }) => path === PASSWORD_RESET
     );
 
-    if (resetPasswordRoute) {
-      resetPasswordRoute.isPrivate = true;
-    }
+    const commonRoutes = resetPasswordRoute ? [resetPasswordRoute] : [];
 
-    return isAdmin
-      ? [...privateRoutes, resetPasswordRoute, ...adminRoutes]
-      : privateRoutes;
-  }, [accessToken, userProfile]);
+    setRoutes(
+      isAdmin
+        ? [...privateRoutes, ...commonRoutes, ...adminRoutes]
+        : [...privateRoutes, ...commonRoutes]
+    );
+  }, [accessToken, userProfile, isUserLoading]);
 
-  return availableRoutes as RoutesTypes[];
+  return routes;
 };
 
 const useGetUserRoutes = ({ routes }: { routes: RoutesTypes[] }) => {
