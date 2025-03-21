@@ -124,6 +124,17 @@ const api = {
 
     const promise = await fetch(apiUrl, requestOptions);
     return handleResponse(promise);
+  },
+
+  passwordReset: async ({ email }: { email: string }) => {
+    const apiUrl = `${baseUrl}/reset-password`;
+    const payload = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    };
+    const promise = await fetch(apiUrl, payload);
+    return handleResponse(promise);
   }
 };
 

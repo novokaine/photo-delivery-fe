@@ -18,7 +18,6 @@ export const registerAction =
     }
 
     dispatch(updateRegisterState(LOADING));
-
     api
       .register({ email, userName, password })
       .then(() => {
@@ -56,6 +55,15 @@ export const logoutAction = (): AppThunk => (dispatch) => {
     })
     .catch(() => dispatch(updateUserFetchState(ERROR)));
 };
+
+export const resetPasswordAction =
+  ({ email }: { email: string }): AppThunk =>
+  (dispatch) => {
+    dispatch(updateUserFetchState(LOADING));
+    api.passwordReset({ email }).then(() => {
+      dispatch(updateUserFetchState(SUCCESS));
+    });
+  };
 
 export const getUserProfileAction = (): AppThunk => (dispatch, getState) => {
   const userState = userFetchState(getState());

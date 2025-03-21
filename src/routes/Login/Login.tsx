@@ -19,7 +19,7 @@ import DialogModal from "../../components/DialogModal";
 import { updateUserFetchState } from "../../redux/reducers/UserReducer";
 import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { loginAction } from "../../redux/actions/UserActions";
-import { DASHBOARD, PASSWORD_RESET, REGISTER } from "..";
+import { PASSWORD_RESET, REGISTER } from "..";
 import {
   isUserDataLoading,
   userFetchState
