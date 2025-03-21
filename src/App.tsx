@@ -2,7 +2,12 @@ import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "./redux";
-import { adminRoutes, PASSWORD_RESET, publicRoutes, routes } from "./routes";
+import {
+  adminRoutes,
+  PASSWORD_RESET,
+  privateRoutes,
+  publicRoutes
+} from "./routes";
 import PrivateRoute from "./routes/PrivateRoute";
 import Loader from "./components/Loader";
 import NotFound from "./routes/NotFound";
@@ -40,16 +45,18 @@ const useGetUpdatedRoutes = ({
 
   if (!accessToken) return publicRoutes;
   const isAdmin = userProfile?.isAdmin;
-  const updatedRoutes = publicRoutes.filter(
+
+  const resetPasswordRoute = publicRoutes.filter(
     ({ path }) => path === PASSWORD_RESET
   );
-  updatedRoutes[0].isPrivate = true;
+
+  resetPasswordRoute[0].isPrivate = true;
 
   const availableRoutes = isAdmin
-    ? [...adminRoutes, ...routes, ...updatedRoutes]
-    : routes;
+    ? [...privateRoutes, ...resetPasswordRoute, ...adminRoutes]
+    : privateRoutes;
 
-  return [...publicRoutes, ...availableRoutes];
+  return availableRoutes;
 };
 
 const App = () => {

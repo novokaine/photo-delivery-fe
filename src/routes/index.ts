@@ -44,9 +44,9 @@ const UserProfile = lazy(() => import("./UserProfile"));
 const ResetPassword = lazy(() => import("./ResetPasswrd"));
 const PhotoUpload = lazy(() => import("./PhotoUpload"));
 
-const privateRoutes: RoutesTypes[] = [
+export const privateRoutes: RoutesTypes[] = [
   {
-    path: DASHBOARD,
+    path: "/",
     Component: DashBoard,
     name: "Dashboard",
     isPrivate: true
@@ -61,7 +61,7 @@ const privateRoutes: RoutesTypes[] = [
 
 export const publicRoutes: RoutesTypes[] = [
   {
-    path: LOGIN,
+    path: "/",
     Component: Login,
     name: "Login",
     isPrivate: false

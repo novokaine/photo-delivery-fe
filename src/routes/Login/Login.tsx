@@ -50,7 +50,7 @@ const Login = (): React.ReactElement => {
   const isError = loginState === ERROR;
 
   if (accessToken) {
-    const from = location.state?.from || DASHBOARD;
+    const from = location.state?.from || "/";
     return <Navigate to={from} replace />;
   }
 

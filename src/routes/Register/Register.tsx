@@ -18,7 +18,6 @@ import { registerAction } from "../../redux/actions/UserActions";
 import { userRegisterState } from "../../redux/selectors/UserSelectors";
 import { ERROR, LOADING } from "../../const/Common";
 import DialogModal from "../../components/DialogModal";
-import { LOGIN } from "..";
 
 const Register = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -145,7 +144,7 @@ const Register = () => {
           </Box>
         </form>
         <Box mt={2}>
-          <Link href={LOGIN} underline="hover">
+          <Link href="/" underline="hover">
             Back
           </Link>
         </Box>
