@@ -93,5 +93,5 @@ export const adminRoutes: RoutesTypes[] = [
 export const routes: RoutesTypes[] = [...privateRoutes, ...publicRoutes];
 
 export const internalRoutes = routes.filter(
-  (route) => ![LOGIN, REGISTER].includes(route.path)
+  ({ name }) => !["Login", "Register"].includes(name)
 );

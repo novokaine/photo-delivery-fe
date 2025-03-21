@@ -1,5 +1,5 @@
 import { JSX, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
@@ -8,16 +8,15 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemText,
   Toolbar,
   Typography
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import AppBar from "@mui/material/AppBar";
-import { internalRoutes } from "../../routes";
 import { logoutAction } from "../../redux/actions/UserActions";
 import { AppDispatch } from "../../redux";
 import { currentUserProfile } from "../../redux/selectors/UserSelectors";
+import { useGetNavigationRoutes } from "../../hooks/routeHooks";
 
 import "./css/LayoutWrapper.scss";
 
@@ -64,9 +63,12 @@ const NavBar: React.FC<NavBarProps> = ({
 
 const LeftMenu: React.FC<{ open: boolean }> = ({ open }): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
-  const location = useLocation();
-  const getLinkClassName = ({ path }: { path: string }) =>
-    location.pathname.startsWith(path) ? "active" : "";
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logoutAction());
+    navigate("/", { replace: true }); // Ensures immediate redirect
+  };
 
   return (
     <Drawer
@@ -88,17 +90,10 @@ const LeftMenu: React.FC<{ open: boolean }> = ({ open }): JSX.Element => {
       }}
     >
       <List className="user-menu">
-        {internalRoutes.map(({ path, name }) => (
-          <ListItem key={path} disablePadding>
-            <Button>
-              <Link to={path} className={getLinkClassName({ path })}>
-                <ListItemText primary={name} />
-              </Link>
-            </Button>
-          </ListItem>
-        ))}
+        {useGetNavigationRoutes()}
+
         <ListItem>
-          <Button onClick={() => dispatch(logoutAction())}>Logout</Button>
+          <Button onClick={handleLogout}>Logout</Button>
         </ListItem>
       </List>
     </Drawer>

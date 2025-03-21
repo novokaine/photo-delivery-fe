@@ -7,5 +7,5 @@ export interface RoutesTypes {
     | React.ComponentType;
   isPrivate: boolean;
   requiresAdmin?: boolean;
-  name?: string;
+  name: string;
 }
