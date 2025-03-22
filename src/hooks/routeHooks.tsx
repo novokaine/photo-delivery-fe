@@ -53,7 +53,9 @@ const useGetUpdatedRoutes = ({
       ({ path }) => path === PASSWORD_RESET
     );
 
-    const commonRoutes = resetPasswordRoute ? [resetPasswordRoute] : [];
+    const commonRoutes = resetPasswordRoute
+      ? [{ ...resetPasswordRoute, isPrivate: true }]
+      : [];
 
     setRoutes(
       isAdmin
