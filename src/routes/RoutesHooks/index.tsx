@@ -53,4 +53,13 @@ const useGetUpdatedRoutes = ({
   return availableRoutes;
 };
 
-export { useGetUpdatedRoutes, getRoutes };
+const useCanGetNewToken = () => {
+  const { pathname } = window.location;
+  const restrictedRoutes = publicRoutes
+    .filter(({ isPrivate }) => !isPrivate)
+    .map(({ path }) => path);
+
+  return !restrictedRoutes.includes(pathname);
+};
+
+export { useGetUpdatedRoutes, getRoutes, useCanGetNewToken };

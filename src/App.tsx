@@ -7,7 +7,11 @@ import NotFound from "./routes/NotFound";
 import { isUserDataLoading } from "./redux/selectors/UserSelectors";
 import { getRefreshTokenAction } from "./redux/actions/TokenActions";
 import { currentAccessToken } from "./redux/selectors/Tokenselectors";
-import { getRoutes, useGetUpdatedRoutes } from "./routes/RoutesHooks";
+import {
+  getRoutes,
+  useCanGetNewToken,
+  useGetUpdatedRoutes
+} from "./routes/RoutesHooks";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,10 +22,12 @@ const App = () => {
     routes: useGetUpdatedRoutes({ accessToken })
   });
 
+  const canGetNewToken = useCanGetNewToken();
+
   useEffect(() => {
-    if (accessToken) return;
+    if (accessToken || !canGetNewToken) return;
     dispatch(getRefreshTokenAction());
-  }, [accessToken, dispatch]);
+  }, [accessToken, canGetNewToken, dispatch]);
 
   if (isUserLoading) return <Loader />;
 

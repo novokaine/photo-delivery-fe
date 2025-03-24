@@ -34,11 +34,11 @@ export const loginAction =
     dispatch(updateUserFetchState(LOADING));
     api
       .login({ userName, password })
-      .then(({ accessToken }) => {
+      .then(({ userData, accessToken }) => {
         dispatch(updateAccessToken(accessToken));
+        dispatch(updateUserProfile(userData));
         dispatch(updateUserFetchState(SUCCESS));
       })
-      .then(() => dispatch(getUserProfileAction()))
       .catch(() => {
         dispatch(updateAccessToken(null));
         dispatch(updateUserFetchState(ERROR));
@@ -73,8 +73,8 @@ export const getUserProfileAction = (): AppThunk => (dispatch, getState) => {
 
   api
     .get("/user-profile")
-    .then(({ message: { username, isAdmin } }) => {
-      dispatch(updateUserProfile({ username, isAdmin }));
+    .then(({ message: { username, email, isAdmin } }) => {
+      dispatch(updateUserProfile({ username, email, isAdmin }));
       dispatch(updateUserFetchState(IDLE));
     })
     .catch(() => {

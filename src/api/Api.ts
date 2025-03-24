@@ -1,4 +1,4 @@
-import { UserDataTypes } from "../redux/Types/UserDataTypes";
+import { UserDataTypes, UserProfileType } from "../redux/Types/UserDataTypes";
 
 const baseUrl = "http://localhost:8000/api";
 
@@ -101,7 +101,10 @@ const api = {
   login: async ({
     userName,
     password
-  }: UserDataTypes): Promise<{ accessToken: string }> => {
+  }: UserDataTypes): Promise<{
+    accessToken: string;
+    userData: UserProfileType;
+  }> => {
     const apiUrl = `${baseUrl}/login`;
 
     const requestOptions = {
