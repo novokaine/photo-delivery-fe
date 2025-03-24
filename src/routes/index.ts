@@ -3,20 +3,20 @@ import { RoutesTypes } from "./Types/RouteCommonTypes";
 import Login from "./Login";
 
 const ROUTES_PATH = {
-  DASHBOARD: "/dashboard",
-  USER_PROFILE: "/user-profile",
-  LOGIN: "/login",
+  LOGIN: "/",
   REGISTER: "/register",
   PASSWORD_RESET: "/reset-password",
+  DASHBOARD: "/dashboard",
+  USER_PROFILE: "/user-profile",
   UPLOAD_PHOTOS: "/upload-photos"
 };
 
 export const {
-  DASHBOARD,
-  USER_PROFILE,
   LOGIN,
   REGISTER,
   PASSWORD_RESET,
+  DASHBOARD,
+  USER_PROFILE,
   UPLOAD_PHOTOS
 } = ROUTES_PATH;
 
@@ -46,7 +46,7 @@ const PhotoUpload = lazy(() => import("./PhotoUpload"));
 
 export const privateRoutes: RoutesTypes[] = [
   {
-    path: "/",
+    path: DASHBOARD,
     Component: DashBoard,
     name: "Dashboard",
     isPrivate: true
@@ -61,7 +61,7 @@ export const privateRoutes: RoutesTypes[] = [
 
 export const publicRoutes: RoutesTypes[] = [
   {
-    path: "/",
+    path: LOGIN,
     Component: Login,
     name: "Login",
     isPrivate: false

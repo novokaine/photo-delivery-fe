@@ -18,7 +18,7 @@ import DialogModal from "../../components/DialogModal";
 import { updateUserFetchState } from "../../redux/reducers/UserReducer";
 import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { loginAction } from "../../redux/actions/UserActions";
-import { PASSWORD_RESET, REGISTER } from "..";
+import { DASHBOARD, PASSWORD_RESET, REGISTER } from "..";
 import {
   isUserDataLoading,
   userFetchState
@@ -49,7 +49,7 @@ const Login = (): React.ReactElement => {
   const isError = loginState === ERROR;
 
   if (accessToken) {
-    const from = location.state?.from || "/";
+    const from = location.state?.from || DASHBOARD;
     return <Navigate to={from} replace />;
   }
 
