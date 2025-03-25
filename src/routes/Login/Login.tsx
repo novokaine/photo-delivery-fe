@@ -18,21 +18,22 @@ import DialogModal from "../../components/DialogModal";
 import { updateUserFetchState } from "../../redux/reducers/UserReducer";
 import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { loginAction } from "../../redux/actions/UserActions";
-import { PASSWORD_RESET, REGISTER } from "..";
+import { DASHBOARD, PASSWORD_RESET, REGISTER } from "..";
 import {
-  isUserDataLoading,
+  currentUserProfile,
   userFetchState
 } from "../../redux/selectors/UserSelectors";
-import { currentAccessToken } from "../../redux/selectors/Tokenselectors";
 
 import "./css/login.scss";
 
 const Login = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
-  const loginState = useSelector(userFetchState);
-  const isUserLoading = useSelector(isUserDataLoading);
-  const accessToken = useSelector(currentAccessToken);
+  const userState = useSelector(userFetchState);
+  const isUserLoading = userState === LOADING;
   const location = useLocation();
+  const userData = useSelector(currentUserProfile);
+
+  const isError = userState === ERROR;
 
   const formik = useFormik<UserDataTypes>({
     initialValues: {
@@ -46,10 +47,8 @@ const Login = (): React.ReactElement => {
     onSubmit: (userData: UserDataTypes) => dispatch(loginAction(userData))
   });
 
-  const isError = loginState === ERROR;
-
-  if (accessToken) {
-    const from = location.state?.from || "/";
+  if (userData) {
+    const from = location.state?.from || DASHBOARD;
     return <Navigate to={from} replace />;
   }
 
@@ -105,7 +104,7 @@ const Login = (): React.ReactElement => {
               fullWidth
               variant="contained"
               type="submit"
-              disabled={loginState === LOADING}
+              disabled={userState === LOADING}
               className="submit"
             >
               <span>Login</span>

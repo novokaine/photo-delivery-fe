@@ -10,6 +10,7 @@ export interface UserDataTypes {
 export type UserProfileType = {
   username: string | null;
   isAdmin: boolean;
+  email: string;
 } | null;
 
 export interface UserReducerType {

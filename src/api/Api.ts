@@ -1,4 +1,4 @@
-import { UserDataTypes } from "../redux/Types/UserDataTypes";
+import { UserDataTypes, UserProfileType } from "../redux/Types/UserDataTypes";
 
 const baseUrl = "http://localhost:8000/api";
 
@@ -18,6 +18,17 @@ const api = {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json"
       }
+    });
+
+    return handleResponse(response);
+  },
+
+  checkAuthStatus: async (): Promise<{ userData: UserProfileType }> => {
+    const apiUrl = `${baseUrl}/check-auth`;
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      mode: "cors",
+      credentials: "include"
     });
 
     return handleResponse(response);
@@ -101,7 +112,9 @@ const api = {
   login: async ({
     userName,
     password
-  }: UserDataTypes): Promise<{ accessToken: string }> => {
+  }: UserDataTypes): Promise<{
+    userData: UserProfileType;
+  }> => {
     const apiUrl = `${baseUrl}/login`;
 
     const requestOptions = {

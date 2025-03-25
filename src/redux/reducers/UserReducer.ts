@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FETCH_STATE } from "../../const/Common";
-import { UserReducerType } from "../Types/UserDataTypes";
+import { UserProfileType, UserReducerType } from "../Types/UserDataTypes";
 
 const { IDLE } = FETCH_STATE;
 
@@ -30,7 +30,7 @@ const UserReducer = createSlice({
 
     updateUserProfile: (
       nextState,
-      { payload }: PayloadAction<UserReducerType["userProfile"]>
+      { payload }: PayloadAction<UserProfileType>
     ) => {
       nextState.userProfile = payload;
     }
