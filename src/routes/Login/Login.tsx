@@ -20,10 +20,10 @@ import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { loginAction } from "../../redux/actions/UserActions";
 import { DASHBOARD, PASSWORD_RESET, REGISTER } from "..";
 import {
+  currentUserProfile,
   isUserDataLoading,
   userFetchState
 } from "../../redux/selectors/UserSelectors";
-import { currentAccessToken } from "../../redux/selectors/Tokenselectors";
 
 import "./css/login.scss";
 
@@ -31,8 +31,8 @@ const Login = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
   const loginState = useSelector(userFetchState);
   const isUserLoading = useSelector(isUserDataLoading);
-  const accessToken = useSelector(currentAccessToken);
   const location = useLocation();
+  const userData = useSelector(currentUserProfile);
 
   const formik = useFormik<UserDataTypes>({
     initialValues: {
@@ -48,7 +48,7 @@ const Login = (): React.ReactElement => {
 
   const isError = loginState === ERROR;
 
-  if (accessToken) {
+  if (userData) {
     const from = location.state?.from || DASHBOARD;
     return <Navigate to={from} replace />;
   }

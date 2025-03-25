@@ -3,7 +3,7 @@ import { RoutesTypes } from "./Types/RouteCommonTypes";
 import Login from "./Login";
 
 const ROUTES_PATH = {
-  LOGIN: "/",
+  LOGIN: "/login",
   REGISTER: "/register",
   PASSWORD_RESET: "/reset-password",
   DASHBOARD: "/dashboard",
@@ -90,7 +90,11 @@ export const adminRoutes: RoutesTypes[] = [
   }
 ];
 
-export const routes: RoutesTypes[] = [...privateRoutes, ...publicRoutes];
+export const routes: RoutesTypes[] = [
+  ...privateRoutes,
+  ...publicRoutes,
+  ...adminRoutes
+];
 
 export const internalRoutes = routes.filter(
   (route) => ![LOGIN, REGISTER].includes(route.path)

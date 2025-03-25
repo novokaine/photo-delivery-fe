@@ -23,6 +23,17 @@ const api = {
     return handleResponse(response);
   },
 
+  checkAuthStatus: async (): Promise<{ userData: UserProfileType }> => {
+    const apiUrl = `${baseUrl}/check-auth`;
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      mode: "cors",
+      credentials: "include"
+    });
+
+    return handleResponse(response);
+  },
+
   getRefreshToken: async () => {
     const refreshToken = await fetch(`${baseUrl}/refresh-token`, {
       method: "POST",
@@ -102,7 +113,6 @@ const api = {
     userName,
     password
   }: UserDataTypes): Promise<{
-    accessToken: string;
     userData: UserProfileType;
   }> => {
     const apiUrl = `${baseUrl}/login`;

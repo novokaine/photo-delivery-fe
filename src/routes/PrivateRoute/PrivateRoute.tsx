@@ -1,10 +1,14 @@
 import React, { JSX, Suspense } from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { currentAccessToken } from "../../redux/selectors/Tokenselectors";
 import LayoutWrapper from "../../components/LayoutWrapper";
 import Loader from "../../components/Loader";
+import { LOADING } from "../../const/Common";
 import { LOGIN } from "..";
+import {
+  currentUserProfile,
+  userFetchState
+} from "../../redux/selectors/UserSelectors";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -13,11 +17,14 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   children
 }): JSX.Element => {
-  const accessToken = useSelector(currentAccessToken);
+  const currentUserFetchState = useSelector(userFetchState);
+  const userData = useSelector(currentUserProfile);
+
+  if (currentUserFetchState === LOADING) return <Loader />;
 
   return (
     <Suspense fallback={<Loader />}>
-      {accessToken ? (
+      {userData ? (
         <LayoutWrapper>{children}</LayoutWrapper>
       ) : (
         <Navigate to={LOGIN} replace />

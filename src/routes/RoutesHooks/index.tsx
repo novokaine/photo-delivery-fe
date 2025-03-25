@@ -7,7 +7,8 @@ import {
   internalRoutes,
   PASSWORD_RESET,
   privateRoutes,
-  publicRoutes
+  publicRoutes,
+  routes
 } from "..";
 import PrivateRoute from "../PrivateRoute";
 
@@ -55,7 +56,7 @@ const useGetUpdatedRoutes = ({
 
 const useCanGetNewToken = () => {
   const { pathname } = window.location;
-  const restrictedRoutes = publicRoutes
+  const restrictedRoutes = routes
     .filter(({ isPrivate }) => !isPrivate)
     .map(({ path }) => path);
 
