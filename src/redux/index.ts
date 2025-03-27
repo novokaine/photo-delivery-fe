@@ -1,6 +1,6 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import UserReducer from "./reducers/UserReducer";
-import ImageListReducer from "./reducers/ImageListReducer";
+import PhotoReducer from "./reducers/PhotoReducer";
 import { createLogger } from "redux-logger";
 
 const isDevEnv = process.env.NODE_ENV === "development";
@@ -8,7 +8,7 @@ const isDevEnv = process.env.NODE_ENV === "development";
 export const store = configureStore({
   reducer: {
     UserReducer,
-    ImageListReducer
+    PhotoReducer
   },
   middleware: (getDefaultMiddleware) =>
     isDevEnv
