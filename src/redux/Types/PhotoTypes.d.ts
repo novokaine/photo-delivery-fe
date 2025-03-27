@@ -1,6 +1,8 @@
 import { FETCH_STATE } from "../../const/Common";
 
 export interface PhotoType {
+  id: string;
+  src: string;
   path: string | undefined;
   relativePath: string | undefined;
   lastModified: number;

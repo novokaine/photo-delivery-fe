@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IDLE } from "../../const/Common";
-import { PhotoReducerType, PhotoType } from "../Types/PhotTypes";
+import { PhotoReducerType, PhotoType } from "../Types/PhotoTypes";
 
 const initialState: PhotoReducerType = {
   photoFetchState: IDLE,

@@ -1,6 +1,5 @@
 import { AppThunk } from "..";
 import api from "../../api/Api";
-import { FileWithPath } from "react-dropzone";
 import { FETCH_STATE } from "../../const/Common";
 import {
   updateDraftPhotos,
@@ -13,7 +12,7 @@ import {
   getCurrentSelectedImages,
   getImagesListFetchState
 } from "../selectors/PhotoSelectors";
-import { PhotoType } from "../Types/PhotTypes";
+import { PhotoType } from "../Types/PhotoTypes";
 
 export const getPhotoListAction = (): AppThunk => (dispatch, getState) => {
   const currentFetchState = getImagesListFetchState(getState());
@@ -46,33 +45,33 @@ export const downloadSelectedAction = (): AppThunk => (dispatch, getState) => {
 
 // Admin management
 export const updateDraftPhotosActions =
-  (photos: readonly FileWithPath[]): AppThunk =>
+  (photos: PhotoType[]): AppThunk =>
   (dispatch, getState) => {
     if (photos.length === 0) return dispatch(updateDraftPhotos([]));
 
     const currentDraft = getCurrentPhotoDraft(getState());
-    const copy: PhotoType[] = [];
+    const draftNames: string[] = currentDraft.map(({ name }) => name);
 
-    photos.map(
-      ({
-        path,
-        relativePath,
-        lastModified,
-        name,
-        size,
-        type,
-        webkitRelativePath
-      }: FileWithPath) =>
-        copy.push({
-          path,
-          relativePath,
-          lastModified,
-          name,
-          size,
-          type,
-          webkitRelativePath
-        })
+    // Filtering - avoid dublicate images
+    const filtered = photos.filter(({ name }) => !draftNames.includes(name));
+
+    if (filtered.length === 0) return;
+
+    dispatch(updateDraftPhotos([...currentDraft, ...filtered]));
+  };
+
+export const deleteDraftPhotos =
+  (toDeleteIds: string[]): AppThunk =>
+  (dispatch, getState) => {
+    const currentDraft = getCurrentPhotoDraft(getState());
+
+    currentDraft
+      .filter(({ id }) => toDeleteIds.includes(id))
+      .forEach(({ src }) => URL.revokeObjectURL(src));
+
+    const filtered: PhotoType[] = currentDraft.filter(
+      ({ id }) => !toDeleteIds.includes(id)
     );
 
-    dispatch(updateDraftPhotos([...currentDraft, ...copy]));
+    dispatch(updateDraftPhotos(filtered));
   };
