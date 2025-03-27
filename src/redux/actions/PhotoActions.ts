@@ -1,4 +1,5 @@
 import { AppThunk } from "..";
+import adminApi from "../../api/AdminApi";
 import api from "../../api/Api";
 import { FETCH_STATE } from "../../const/Common";
 import {
@@ -75,3 +76,12 @@ export const deleteDraftPhotos =
 
     dispatch(updateDraftPhotos(filtered));
   };
+
+export const uploadPhotosAction = (): AppThunk => (dispatch, getState) => {
+  const draftPhotos = getCurrentPhotoDraft(getState());
+  const copy: any[] = draftPhotos.map(
+    ({ src, id, webkitRelativePath, ...rest }) => rest
+  );
+
+  adminApi.post("/upload-photos", copy);
+};

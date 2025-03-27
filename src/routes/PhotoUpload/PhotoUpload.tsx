@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux";
 import {
   deleteDraftPhotos,
-  updateDraftPhotosActions
+  updateDraftPhotosActions,
+  uploadPhotosAction
 } from "../../redux/actions/PhotoActions";
 import { useCallback, useState } from "react";
 import { getCurrentPhotoDraft } from "../../redux/selectors/PhotoSelectors";
@@ -54,13 +55,16 @@ const PhotoUpload = () => {
     [dispatch]
   );
 
-  const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
-    useDropzone({
-      accept: {
-        "image/*": [".jpeg", ".png"]
-      },
-      onDrop
-    });
+  const {
+    // acceptedFiles, fileRejections,
+    getRootProps,
+    getInputProps
+  } = useDropzone({
+    accept: {
+      "image/*": [".jpeg", ".png"]
+    },
+    onDrop
+  });
 
   const files = draftPhotos?.map(({ id, src }) => (
     <li
@@ -100,6 +104,7 @@ const PhotoUpload = () => {
             Delete selected
           </Button>
         )}
+        <Button onClick={() => dispatch(uploadPhotosAction())}>Submit</Button>
         <ul>{files}</ul>
       </div>
     </div>

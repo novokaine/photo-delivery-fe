@@ -2,13 +2,13 @@ import { FETCH_STATE } from "../../const/Common";
 
 export interface PhotoType {
   id: string;
-  src: string;
-  path: string | undefined;
-  relativePath: string | undefined;
+  path?: string;
+  relativePath?: string;
   lastModified: number;
   name: string;
   size: number;
   type: string;
+  src: string;
   webkitRelativePath: string;
 }
 
