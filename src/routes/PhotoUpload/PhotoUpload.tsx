@@ -2,15 +2,16 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 import BackupIcon from "@mui/icons-material/Backup";
 import { Button, Checkbox } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../redux";
+import { AppDispatch, RootState } from "../../redux";
 import {
   deleteDraftPhotos,
   updateDraftPhotosActions,
   uploadPhotosAction
 } from "../../redux/actions/PhotoActions";
 import { useCallback, useState } from "react";
-import { getCurrentPhotoDraft } from "../../redux/selectors/PhotoSelectors";
 import { PhotoType } from "../../redux/Types/PhotoTypes";
+import { LOADING } from "../../const/Common";
+import Loader from "../../components/Loader";
 
 /**
  * Functionalities to be implemented:
@@ -46,8 +47,11 @@ const createPhotoPreview = (files: FileWithPath[]): PhotoType[] =>
 
 const PhotoUpload = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const draftPhotos = useSelector(getCurrentPhotoDraft);
   const [photosToDelete, setPhotosToDelete] = useState<string[]>([]);
+
+  const { draftPhotoList, photoFetchState } = useSelector(
+    (state: RootState) => state.PhotoReducer
+  );
 
   const onDrop = useCallback(
     (files: FileWithPath[]) =>
@@ -66,7 +70,7 @@ const PhotoUpload = () => {
     onDrop
   });
 
-  const files = draftPhotos?.map(({ id, src }) => (
+  const files = draftPhotoList?.map(({ id, src }) => (
     <li
       id={id}
       key={id}
@@ -85,6 +89,7 @@ const PhotoUpload = () => {
 
   return (
     <div className="drop-wrapper">
+      {photoFetchState === LOADING && <Loader />}
       <section className="container">
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />

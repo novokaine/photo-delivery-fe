@@ -1,7 +1,7 @@
 import { AppThunk } from "..";
 import adminApi from "../../api/AdminApi";
 import api from "../../api/Api";
-import { ERROR, IDLE, LOADING } from "../../const/Common";
+import { ERROR, IDLE, LOADING, SUCCESS } from "../../const/Common";
 import {
   updateDraftPhotos,
   updatePhotoFetchState,
@@ -83,9 +83,17 @@ export const uploadPhotosAction =
     const formData = new FormData();
     const files = await Promise.all(draftPhotos.map(convertToFile));
 
+    dispatch(updatePhotoFetchState(LOADING));
+
     files.forEach((file) => {
       formData.append("photos", file);
     });
 
-    adminApi.uploadPhotos(formData);
+    adminApi
+      .uploadPhotos(formData)
+      .then(() => {
+        dispatch(updateDraftPhotos([]));
+        dispatch(updatePhotoFetchState(SUCCESS));
+      })
+      .catch(() => dispatch(updatePhotoFetchState(ERROR)));
   };
