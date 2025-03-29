@@ -1,7 +1,7 @@
 import { AppThunk } from "..";
 import adminApi from "../../api/AdminApi";
 import api from "../../api/Api";
-import { FETCH_STATE } from "../../const/Common";
+import { ERROR, IDLE, LOADING } from "../../const/Common";
 import {
   updateDraftPhotos,
   updatePhotoFetchState,
@@ -14,25 +14,20 @@ import {
   getImagesListFetchState
 } from "../selectors/PhotoSelectors";
 import { PhotoType } from "../Types/PhotoTypes";
-
-const convertToFile = async (photo: PhotoType) => {
-  const response = await fetch(photo.src); // Get Blob data
-  const blob = await response.blob();
-  return new File([blob], photo.name, { type: photo.type });
-};
+import { convertToFile } from "../utils/actionsUtils";
 
 export const getPhotoListAction = (): AppThunk => (dispatch, getState) => {
   const currentFetchState = getImagesListFetchState(getState());
-  if (currentFetchState === FETCH_STATE.LOADING) return;
+  if (currentFetchState === LOADING) return;
 
-  dispatch(updatePhotoFetchState(FETCH_STATE.LOADING));
+  dispatch(updatePhotoFetchState(LOADING));
   api
     .get("/images")
     .then(({ images }) => {
       dispatch(updatePhotoList(images));
-      dispatch(updateSelectedPhotos(FETCH_STATE.IDLE));
+      dispatch(updateSelectedPhotos(IDLE));
     })
-    .catch((err) => dispatch(updatePhotoFetchState(FETCH_STATE.ERROR)));
+    .catch((err) => dispatch(updatePhotoFetchState(ERROR)));
 };
 
 export const updateSelectedImageAction =

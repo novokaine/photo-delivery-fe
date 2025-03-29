@@ -9,8 +9,8 @@
       flex-wrap: wrap;
       gap: 15px;
       li {
-        // flex-direction: column;
         position: relative;
+        cursor: pointer;
         .checkbox {
           position: absolute;
           right: 0;
@@ -18,7 +18,7 @@
         }
         svg {
           path {
-            fill: red;
+            fill: #fff;
           }
         }
       }

@@ -104,7 +104,9 @@ const PhotoUpload = () => {
             Delete selected
           </Button>
         )}
-        <Button onClick={() => dispatch(uploadPhotosAction())}>Submit</Button>
+        {files.length > 0 && (
+          <Button onClick={() => dispatch(uploadPhotosAction())}>Submit</Button>
+        )}
         <ul>{files}</ul>
       </div>
     </div>
