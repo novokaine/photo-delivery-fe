@@ -92,6 +92,7 @@ export const uploadPhotosAction =
     adminApi
       .uploadPhotos(formData)
       .then(() => {
+        draftPhotos.forEach(({ src }) => URL.revokeObjectURL(src));
         dispatch(updateDraftPhotos([]));
         dispatch(updatePhotoFetchState(SUCCESS));
       })
