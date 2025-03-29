@@ -15,6 +15,12 @@ import {
 } from "../selectors/PhotoSelectors";
 import { PhotoType } from "../Types/PhotoTypes";
 
+const convertToFile = async (photo: PhotoType) => {
+  const response = await fetch(photo.src); // Get Blob data
+  const blob = await response.blob();
+  return new File([blob], photo.name, { type: photo.type });
+};
+
 export const getPhotoListAction = (): AppThunk => (dispatch, getState) => {
   const currentFetchState = getImagesListFetchState(getState());
   if (currentFetchState === FETCH_STATE.LOADING) return;
@@ -22,7 +28,6 @@ export const getPhotoListAction = (): AppThunk => (dispatch, getState) => {
   dispatch(updatePhotoFetchState(FETCH_STATE.LOADING));
   api
     .get("/images")
-    // @ts-ignore
     .then(({ images }) => {
       dispatch(updatePhotoList(images));
       dispatch(updateSelectedPhotos(FETCH_STATE.IDLE));
@@ -77,11 +82,15 @@ export const deleteDraftPhotos =
     dispatch(updateDraftPhotos(filtered));
   };
 
-export const uploadPhotosAction = (): AppThunk => (dispatch, getState) => {
-  const draftPhotos = getCurrentPhotoDraft(getState());
-  const copy: any[] = draftPhotos.map(
-    ({ src, id, webkitRelativePath, ...rest }) => rest
-  );
+export const uploadPhotosAction =
+  (): AppThunk => async (dispatch, getState) => {
+    const draftPhotos = getCurrentPhotoDraft(getState());
+    const formData = new FormData();
+    const files = await Promise.all(draftPhotos.map(convertToFile));
 
-  adminApi.post("/upload-photos", copy);
-};
+    files.forEach((file) => {
+      formData.append("photos", file);
+    });
+
+    adminApi.uploadPhotos(formData);
+  };

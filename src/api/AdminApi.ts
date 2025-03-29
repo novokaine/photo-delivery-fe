@@ -15,6 +15,17 @@ const adminApi = {
     });
 
     return handleResponse(requestOptions);
+  },
+  uploadPhotos: async (data: FormData) => {
+    const apiUrl = `${BASE_URL}/admin/upload-photos`;
+    const requestOptions = await fetch(apiUrl, {
+      method: "POST",
+      credentials: "include",
+      mode: "cors",
+      body: data
+    });
+
+    return handleResponse(requestOptions);
   }
 };
 
