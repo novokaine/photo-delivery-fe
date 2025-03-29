@@ -1,16 +1,9 @@
 import { UserDataTypes, UserProfileType } from "../redux/Types/UserDataTypes";
-
-const baseUrl = "http://localhost:8000/api";
-
-const handleResponse = async (response: Response): Promise<any> => {
-  if (!response.ok) throw new Error("Cannot fetch data");
-
-  return await response.json();
-};
+import { BASE_URL, handleResponse } from "./Const";
 
 const api = {
   get: async (url: string) => {
-    const apiUrl = `${baseUrl}/private${url}`;
+    const apiUrl = `${BASE_URL}/private${url}`;
     const response = await fetch(apiUrl, {
       mode: "cors",
       credentials: "include",
@@ -24,7 +17,7 @@ const api = {
   },
 
   checkAuthStatus: async (): Promise<{ userData: UserProfileType }> => {
-    const apiUrl = `${baseUrl}/check-auth`;
+    const apiUrl = `${BASE_URL}/check-auth`;
     const response = await fetch(apiUrl, {
       method: "GET",
       mode: "cors",
@@ -35,7 +28,7 @@ const api = {
   },
 
   getRefreshToken: async () => {
-    const refreshToken = await fetch(`${baseUrl}/refresh-token`, {
+    const refreshToken = await fetch(`${BASE_URL}/refresh-token`, {
       method: "POST",
       credentials: "include"
     });
@@ -49,7 +42,7 @@ const api = {
       return;
     }
 
-    const response = await fetch(`${baseUrl}/private/download`, {
+    const response = await fetch(`${BASE_URL}/private/download`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -73,7 +66,7 @@ const api = {
   },
 
   post: async (url: string, requestData: string[]) => {
-    const apiUrl = `${baseUrl}/private${url}`;
+    const apiUrl = `${BASE_URL}/private${url}`;
 
     const requestOptions = {
       method: "POST",
@@ -92,7 +85,7 @@ const api = {
     userName,
     password
   }: UserDataTypes): Promise<any> => {
-    const apiUrl = `${baseUrl}/register`;
+    const apiUrl = `${BASE_URL}/register`;
     const requestOptions = {
       method: "POST",
       headers: {
@@ -115,7 +108,7 @@ const api = {
   }: UserDataTypes): Promise<{
     userData: UserProfileType;
   }> => {
-    const apiUrl = `${baseUrl}/login`;
+    const apiUrl = `${BASE_URL}/login`;
 
     const requestOptions = {
       method: "POST",
@@ -129,7 +122,7 @@ const api = {
   },
 
   logout: async () => {
-    const apiUrl = `${baseUrl}/logout`;
+    const apiUrl = `${BASE_URL}/logout`;
     const requestOptions = {
       method: "POST",
       credentials: "include"
@@ -140,7 +133,7 @@ const api = {
   },
 
   passwordReset: async ({ email }: { email: string }) => {
-    const apiUrl = `${baseUrl}/reset-password`;
+    const apiUrl = `${BASE_URL}/reset-password`;
     const payload = {
       method: "POST",
       headers: { "Content-Type": "application/json" },

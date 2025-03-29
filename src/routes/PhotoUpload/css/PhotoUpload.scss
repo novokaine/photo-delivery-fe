@@ -1,0 +1,44 @@
+.drop-wrapper {
+  width: 100%;
+  .photos-list {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      li {
+        position: relative;
+        cursor: pointer;
+        .checkbox {
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+        svg {
+          path {
+            fill: #fff;
+          }
+        }
+      }
+    }
+  }
+
+  .dropzone {
+    border: 3px dashed #eee;
+    border-radius: 2px;
+    background: #fafafa;
+    color: #bdbdbd;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 150px;
+    position: sticky;
+    top: 30px;
+    justify-content: center;
+    &:focus {
+      border-color: #2196f3;
+    }
+  }
+}

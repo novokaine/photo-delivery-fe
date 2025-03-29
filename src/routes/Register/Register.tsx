@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFormik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
-import { UserDataTypes } from "../../redux/Types/UserDataTypes";
-import { AppDispatch } from "../../redux";
+import { useSelector } from "react-redux";
 import {
   Box,
   Button,
@@ -14,13 +10,12 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { registerAction } from "../../redux/actions/UserActions";
 import { userRegisterState } from "../../redux/selectors/UserSelectors";
 import { ERROR, LOADING } from "../../const/Common";
 import DialogModal from "../../components/DialogModal";
+import { useRegisterForm } from "./registerUtils";
 
 const Register = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const [registerError, setRegisterError] = useState<boolean>(false);
   const registerState = useSelector(userRegisterState);
 
@@ -28,31 +23,7 @@ const Register = () => {
     if (registerState === ERROR) setRegisterError(true);
   }, [registerState]);
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      userName: "",
-      password: "",
-      retypePassword: ""
-    },
-    validationSchema: Yup.object({
-      email: Yup.string().email().required("Email is required"),
-      userName: Yup.string().required("Username is required"),
-      password: Yup.string()
-        .required("Password is required")
-        .min(8, "Password must be 8 characters long")
-        .matches(/[0-9]/, "Password requires a number")
-        .matches(/[a-z]/, "Password requires a lowercase letter")
-        .matches(/[A-Z]/, "Password requires an uppercase letter")
-        .matches(/[^\w]/, "Password requires a symbol"),
-      retypePassword: Yup.string().oneOf(
-        // @ts-ignore
-        [Yup.ref("password"), null],
-        'Must match "password" field value'
-      )
-    }),
-    onSubmit: (userData: UserDataTypes) => dispatch(registerAction(userData))
-  });
+  const { formik } = useRegisterForm();
 
   return (
     <Container
