@@ -10,7 +10,6 @@ import {
 import { createPhotoPreview } from "./photoUtils";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import BackupIcon from "@mui/icons-material/Backup";
-import { CheckBox } from "@mui/icons-material";
 
 const PhotoHandler = () => {
   const dispatch = useDispatch<AppDispatch>();
