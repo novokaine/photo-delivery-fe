@@ -1,4 +1,4 @@
-import React, { JSX, Suspense } from "react";
+import React, { JSX } from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LayoutWrapper from "../../components/LayoutWrapper";
@@ -22,14 +22,10 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
 
   if (currentUserFetchState === LOADING) return <Loader />;
 
-  return (
-    <Suspense fallback={<Loader />}>
-      {userData ? (
-        <LayoutWrapper>{children}</LayoutWrapper>
-      ) : (
-        <Navigate to={LOGIN} replace />
-      )}
-    </Suspense>
+  return userData ? (
+    <LayoutWrapper>{children}</LayoutWrapper>
+  ) : (
+    <Navigate to={LOGIN} replace />
   );
 };
 

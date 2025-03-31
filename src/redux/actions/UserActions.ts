@@ -49,11 +49,11 @@ export const checkAuthStatusAction = (): AppThunk => (dispatch) => {
     .checkAuthStatus()
     .then(({ userData }) => {
       dispatch(updateUserProfile(userData));
-      dispatch(updateUserFetchState(IDLE));
+      dispatch(updateUserFetchState(SUCCESS));
     })
     .catch(() => {
       dispatch(updateUserProfile(null));
-      dispatch(updateUserFetchState(IDLE));
+      dispatch(updateUserFetchState(ERROR));
     });
 };
 
