@@ -7,7 +7,8 @@ import {
 } from "../reducers/UserReducer";
 import { updateRegisterState } from "../reducers/UserReducer";
 import { UserDataTypes } from "../Types/UserDataTypes";
-import { userFetchState } from "../selectors/UserSelectors";
+import { currentUserProfile, userFetchState } from "../selectors/UserSelectors";
+import { updateAccessToken } from "../reducers/TockenReducer";
 
 export const registerAction =
   ({ email, userName, password }: UserDataTypes): AppThunk =>
@@ -33,8 +34,9 @@ export const loginAction =
     dispatch(updateUserFetchState(LOADING));
     api
       .login({ userName, password })
-      .then(({ userData }) => {
+      .then(({ userData, accessToken }) => {
         dispatch(updateUserProfile(userData));
+        dispatch(updateAccessToken(accessToken));
         dispatch(updateUserFetchState(SUCCESS));
       })
       .catch(() => {
@@ -43,8 +45,12 @@ export const loginAction =
       });
   };
 
-export const checkAuthStatusAction = (): AppThunk => (dispatch) => {
+export const checkAuthStatusAction = (): AppThunk => (dispatch, getState) => {
   dispatch(updateUserFetchState(LOADING));
+  const userProfile = currentUserProfile(getState());
+
+  if (userProfile) return;
+
   api
     .checkAuthStatus()
     .then(({ userData }) => {
@@ -53,7 +59,7 @@ export const checkAuthStatusAction = (): AppThunk => (dispatch) => {
     })
     .catch(() => {
       dispatch(updateUserProfile(null));
-      dispatch(updateUserFetchState(ERROR));
+      dispatch(updateUserFetchState(IDLE));
     });
 };
 
@@ -63,6 +69,7 @@ export const logoutAction = (): AppThunk => (dispatch) => {
     .logout()
     .then(() => {
       dispatch(updateUserProfile(null));
+      dispatch(updateAccessToken(null));
       dispatch(updateUserFetchState(IDLE));
     })
     .catch(() => dispatch(updateUserFetchState(ERROR)));
