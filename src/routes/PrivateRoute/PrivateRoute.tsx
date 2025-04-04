@@ -22,8 +22,8 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const location = useLocation();
   const tokenFetchState = useSelector(getTokenFetchState);
   const currentToken = useSelector(getCurrentToken);
-
   const dispatch = useDispatch<AppDispatch>();
+
   useLayoutEffect(() => {
     if (currentToken || tokenFetchState === LOADING) return;
     dispatch(checkAuthStatusAction());

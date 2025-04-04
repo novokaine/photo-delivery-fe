@@ -4,7 +4,7 @@ import { ERROR, IDLE, LOADING } from "../../const/Common";
 import {
   updateAccessToken,
   updateTokenFetchState
-} from "../reducers/TockenReducer";
+} from "../reducers/TokenReducer";
 
 export const getAccessTokenAction = (): AppThunk => (dispatch, getState) => {
   dispatch(updateTokenFetchState(LOADING));

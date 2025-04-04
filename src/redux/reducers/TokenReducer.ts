@@ -8,7 +8,7 @@ const initialState: TokenReducerType = {
 };
 
 const TokenReducer = createSlice({
-  name: "TockenReducer",
+  name: "TokenReducer",
   initialState,
   reducers: {
     updateTokenFetchState: (

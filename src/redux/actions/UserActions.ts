@@ -11,7 +11,7 @@ import { currentUserProfile, userFetchState } from "../selectors/UserSelectors";
 import {
   updateAccessToken,
   updateTokenFetchState
-} from "../reducers/TockenReducer";
+} from "../reducers/TokenReducer";
 import { getCurrentToken } from "../selectors/TokenSelectors";
 
 export const registerAction =

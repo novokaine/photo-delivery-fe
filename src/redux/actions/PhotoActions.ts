@@ -96,5 +96,7 @@ export const uploadPhotosAction =
         dispatch(updateDraftPhotos([]));
         dispatch(updatePhotoFetchState(SUCCESS));
       })
-      .catch(() => dispatch(updatePhotoFetchState(ERROR)));
+      .catch(() => {
+        dispatch(updatePhotoFetchState(ERROR));
+      });
   };
