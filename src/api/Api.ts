@@ -21,7 +21,10 @@ const api = {
     return handleResponse(response);
   },
 
-  checkAuthStatus: async (): Promise<{ userData: UserProfileType }> => {
+  checkAuthStatus: async (): Promise<{
+    userData: UserProfileType;
+    accessToken: string;
+  }> => {
     const apiUrl = `${BASE_URL}/check-auth`;
     const response = await fetch(apiUrl, {
       method: "GET",
