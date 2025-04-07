@@ -7,7 +7,12 @@ import {
 } from "../reducers/UserReducer";
 import { updateRegisterState } from "../reducers/UserReducer";
 import { UserDataTypes } from "../Types/UserDataTypes";
-import { userFetchState } from "../selectors/UserSelectors";
+import { currentUserProfile, userFetchState } from "../selectors/UserSelectors";
+import {
+  updateAccessToken,
+  updateTokenFetchState
+} from "../reducers/TokenReducer";
+import { getCurrentToken } from "../selectors/TokenSelectors";
 
 export const registerAction =
   ({ email, userName, password }: UserDataTypes): AppThunk =>
@@ -33,27 +38,40 @@ export const loginAction =
     dispatch(updateUserFetchState(LOADING));
     api
       .login({ userName, password })
-      .then(({ userData }) => {
+      .then(({ userData, accessToken }) => {
         dispatch(updateUserProfile(userData));
+        dispatch(updateAccessToken(accessToken));
         dispatch(updateUserFetchState(SUCCESS));
+        dispatch(updateTokenFetchState(SUCCESS));
       })
       .catch(() => {
         dispatch(updateUserProfile(null));
         dispatch(updateUserFetchState(ERROR));
+        dispatch(updateAccessToken(ERROR));
       });
   };
 
-export const checkAuthStatusAction = (): AppThunk => (dispatch) => {
+export const checkAuthStatusAction = (): AppThunk => (dispatch, getState) => {
   dispatch(updateUserFetchState(LOADING));
+  dispatch(updateTokenFetchState(LOADING));
+  const userProfile = currentUserProfile(getState());
+  const accessToken = getCurrentToken(getState());
+
+  if (userProfile && accessToken) return;
+
   api
     .checkAuthStatus()
-    .then(({ userData }) => {
+    .then(({ userData, accessToken }) => {
       dispatch(updateUserProfile(userData));
-      dispatch(updateUserFetchState(IDLE));
+      dispatch(updateAccessToken(accessToken));
+      dispatch(updateUserFetchState(SUCCESS));
+      dispatch(updateTokenFetchState(SUCCESS));
     })
     .catch(() => {
       dispatch(updateUserProfile(null));
-      dispatch(updateUserFetchState(IDLE));
+      dispatch(updateAccessToken(null));
+      dispatch(updateUserFetchState(ERROR));
+      dispatch(updateTokenFetchState(ERROR));
     });
 };
 
@@ -63,6 +81,7 @@ export const logoutAction = (): AppThunk => (dispatch) => {
     .logout()
     .then(() => {
       dispatch(updateUserProfile(null));
+      dispatch(updateAccessToken(null));
       dispatch(updateUserFetchState(IDLE));
     })
     .catch(() => dispatch(updateUserFetchState(ERROR)));

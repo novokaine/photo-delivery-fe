@@ -1,22 +1,30 @@
+import { store } from "../redux";
 import { UserDataTypes, UserProfileType } from "../redux/Types/UserDataTypes";
 import { BASE_URL, handleResponse } from "./Const";
 
 const api = {
   get: async (url: string) => {
+    const accessToken = store.getState().TokenReducer.accessToken;
+    if (!accessToken) return;
+
     const apiUrl = `${BASE_URL}/private${url}`;
     const response = await fetch(apiUrl, {
       mode: "cors",
       credentials: "include",
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`
       }
     });
 
     return handleResponse(response);
   },
 
-  checkAuthStatus: async (): Promise<{ userData: UserProfileType }> => {
+  checkAuthStatus: async (): Promise<{
+    userData: UserProfileType;
+    accessToken: string;
+  }> => {
     const apiUrl = `${BASE_URL}/check-auth`;
     const response = await fetch(apiUrl, {
       method: "GET",
@@ -25,15 +33,6 @@ const api = {
     });
 
     return handleResponse(response);
-  },
-
-  getRefreshToken: async () => {
-    const refreshToken = await fetch(`${BASE_URL}/refresh-token`, {
-      method: "POST",
-      credentials: "include"
-    });
-
-    return handleResponse(refreshToken);
   },
 
   downloadSelection: async (selectedImages: string[]) => {
@@ -66,11 +65,15 @@ const api = {
   },
 
   post: async (url: string, requestData: string[]) => {
+    const accessToken = store.getState().TokenReducer.accessToken;
+
+    if (!accessToken) return;
     const apiUrl = `${BASE_URL}/private${url}`;
 
     const requestOptions = {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(requestData)
@@ -107,6 +110,7 @@ const api = {
     password
   }: UserDataTypes): Promise<{
     userData: UserProfileType;
+    accessToken: string;
   }> => {
     const apiUrl = `${BASE_URL}/login`;
 

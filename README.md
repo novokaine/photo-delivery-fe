@@ -1,46 +1,108 @@
-# Getting Started with Create React App
+# Photo Delivery (Frontend)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
+This is the frontend for the **Photo Delivery** platform, built using **React + TypeScript + Redux**. It supports secure user authentication using **access and refresh tokens**, allowing administrators to upload and manage photo drafts securely.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🔧 Tech Stack
 
-### `npm start`
+- **React** (with TypeScript)
+- **Redux Toolkit** for state management
+- **React Router** for routing
+- **Custom token-based authentication** (access token in Redux, refresh token in HTTP-only cookie)
+- **FormData** support for file uploads
+- **Custom retry logic** for auto-refreshing expired access tokens
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🔐 Authentication Architecture
 
-### `npm test`
+- **Access Token** is stored in Redux and sent via `Authorization` header.
+- **Refresh Token** is stored in an **HTTP-only cookie** and used to silently refresh the access token.
+- When an access token expires (15 min), the frontend calls the refresh endpoint and retries the original request **without failing the user interaction**.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 📁 Folder Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+src/
+├── api/               # API methods (with retry logic)
+├── components/        # Reusable UI components
+├── pages/             # Route-level views (Login, Dashboard, etc)
+├── redux/             # Redux slices and store setup
+├── routes/            # Public and private routes
+├── types/             # TypeScript type definitions
+├── utils/             # Helper functions
+├── tests/             # Unit tests (mirroring actual structure)
+└── App.tsx            # App entry with route declarations
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🚀 Running the App
 
-### `npm run eject`
+```bash
+# Clone the repo
+https://github.com/novokaine/photo-delivery-fe.git
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# Install dependencies
+npm install
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Start the development server
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Make sure the backend is running at `http://localhost:5000` or update the `BASE_URL` in your `api/Const.ts` file.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+---
 
-## Learn More
+## 📦 API Retry Logic
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To prevent failed actions due to expired access tokens:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Calls to the backend are wrapped in a `handleWithRetry()` utility.
+2. If the server responds with a `419`, a Redux action `getAccessTokenAction` is dispatched.
+3. The state waits for the token to refresh.
+4. The original request is retried once the new access token is received.
+
+This approach ensures **a seamless user experience** even when tokens expire.
+
+---
+
+## 🧪 Testing
+
+Unit tests are placed in a dedicated `src/tests/` folder to ensure clear separation from core logic.
+
+```bash
+npm run test
+```
+
+---
+
+## 📤 Deployment
+
+This project is configured for deployment on **Vercel**. You can use GitHub login for Vercel and connect the repo. The `main` branch will be used for production deploys.
+
+---
+
+## 💡 What's Next
+
+- [ ] Finalize deployment on Vercel
+- [ ] Add CI/CD (GitHub Actions)
+- [ ] Create a clean dashboard UI for photo uploads
+- [ ] Add support for user roles & permissions
+
+---
+
+## 🧠 Author
+
+This project is maintained by a seasoned frontend engineer with over 17 years of experience in UI/React, passionate about clean code and simple, scalable architecture.
+
+You're welcome to contribute or reach out for feedback and ideas.
+
+---
+
+## 🔗 Related Repos
+
+- [Backend Repo](https://github.com/novokaine/photo-delivery-be)

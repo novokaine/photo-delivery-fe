@@ -1,14 +1,16 @@
-import React, { JSX, Suspense } from "react";
-import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { JSX, useLayoutEffect } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import LayoutWrapper from "../../components/LayoutWrapper";
 import Loader from "../../components/Loader";
 import { LOADING } from "../../const/Common";
 import { LOGIN } from "..";
+import { AppDispatch } from "../../redux";
+import { checkAuthStatusAction } from "../../redux/actions/UserActions";
 import {
-  currentUserProfile,
-  userFetchState
-} from "../../redux/selectors/UserSelectors";
+  getCurrentToken,
+  getTokenFetchState
+} from "../../redux/selectors/TokenSelectors";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -17,19 +19,22 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   children
 }): JSX.Element => {
-  const currentUserFetchState = useSelector(userFetchState);
-  const userData = useSelector(currentUserProfile);
+  const location = useLocation();
+  const tokenFetchState = useSelector(getTokenFetchState);
+  const currentToken = useSelector(getCurrentToken);
+  const dispatch = useDispatch<AppDispatch>();
 
-  if (currentUserFetchState === LOADING) return <Loader />;
+  useLayoutEffect(() => {
+    if (currentToken || tokenFetchState === LOADING) return;
+    dispatch(checkAuthStatusAction());
+  }, [currentToken, tokenFetchState, dispatch]);
 
-  return (
-    <Suspense fallback={<Loader />}>
-      {userData ? (
-        <LayoutWrapper>{children}</LayoutWrapper>
-      ) : (
-        <Navigate to={LOGIN} replace />
-      )}
-    </Suspense>
+  if (tokenFetchState === LOADING) return <Loader />;
+
+  return currentToken ? (
+    <LayoutWrapper>{children}</LayoutWrapper>
+  ) : (
+    <Navigate to={LOGIN} state={{ from: location }} replace />
   );
 };
 
