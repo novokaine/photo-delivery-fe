@@ -3,7 +3,7 @@ import { RoutesTypes } from "./Types/RouteCommonTypes";
 import Login from "./Login";
 
 const ROUTES_PATH = {
-  LOGIN: "/login",
+  LOGIN: "/",
   REGISTER: "/register",
   PASSWORD_RESET: "/reset-password",
   DASHBOARD: "/dashboard",

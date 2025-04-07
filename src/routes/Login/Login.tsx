@@ -20,9 +20,9 @@ import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { loginAction } from "../../redux/actions/UserActions";
 import { DASHBOARD, PASSWORD_RESET, REGISTER } from "..";
 import { userFetchState } from "../../redux/selectors/UserSelectors";
+import { getCurrentToken } from "../../redux/selectors/TokenSelectors";
 
 import "./css/login.scss";
-import { getCurrentToken } from "../../redux/selectors/TokenSelectors";
 
 const Login = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
