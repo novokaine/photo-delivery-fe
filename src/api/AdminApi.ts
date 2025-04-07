@@ -1,4 +1,5 @@
 import { store } from "../redux";
+import { withAuthRetry } from "./Common";
 import { BASE_URL, handleResponse } from "./Const";
 
 const adminApi = {
@@ -22,22 +23,25 @@ const adminApi = {
 
     return handleResponse(requestOptions);
   },
-  uploadPhotos: async (data: FormData) => {
-    const accessToken = store.getState().TokenReducer.accessToken;
-
-    if (!accessToken) return;
+  uploadPhotos: async (data: FormData): Promise<any> => {
     const apiUrl = `${BASE_URL}/admin/upload-photos`;
-    const requestOptions = await fetch(apiUrl, {
-      method: "POST",
-      credentials: "include",
-      mode: "cors",
-      body: data,
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
 
-    return handleResponse(requestOptions);
+    const fetchFn = async () => {
+      const accessToken = store.getState().TokenReducer.accessToken;
+      if (!accessToken) throw new Error("No access token available");
+
+      return await fetch(apiUrl, {
+        method: "POST",
+        credentials: "include",
+        mode: "cors",
+        body: data,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+    };
+
+    return await withAuthRetry(fetchFn);
   }
 };
 
