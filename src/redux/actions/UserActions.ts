@@ -13,6 +13,7 @@ import {
   updateTokenFetchState
 } from "../reducers/TokenReducer";
 import { getCurrentToken } from "../selectors/TokenSelectors";
+import { LOGIN } from "../../routes";
 
 export const registerAction =
   ({ email, userName, password }: UserDataTypes): AppThunk =>
@@ -83,8 +84,14 @@ export const logoutAction = (): AppThunk => (dispatch) => {
       dispatch(updateUserProfile(null));
       dispatch(updateAccessToken(null));
       dispatch(updateUserFetchState(IDLE));
+      dispatch(updateTokenFetchState(IDLE));
+      window.location.href = LOGIN;
     })
-    .catch(() => dispatch(updateUserFetchState(ERROR)));
+    .catch((err) => {
+      console.log(err);
+      debugger;
+      dispatch(updateUserFetchState(ERROR));
+    });
 };
 
 export const resetPasswordAction =
