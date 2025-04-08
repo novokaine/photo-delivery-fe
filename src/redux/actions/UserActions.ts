@@ -87,9 +87,7 @@ export const logoutAction = (): AppThunk => (dispatch) => {
       dispatch(updateTokenFetchState(IDLE));
       window.location.href = LOGIN;
     })
-    .catch((err) => {
-      console.log(err);
-      debugger;
+    .catch(() => {
       dispatch(updateUserFetchState(ERROR));
     });
 };
