@@ -1,15 +1,5 @@
 import { Route } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { RoutesTypes } from "../Types/RouteCommonTypes";
-import { currentUserProfile } from "../../redux/selectors/UserSelectors";
-import {
-  adminRoutes,
-  internalRoutes,
-  PASSWORD_RESET,
-  privateRoutes,
-  publicRoutes,
-  routes
-} from "..";
 import PrivateRoute from "../PrivateRoute";
 
 const getRoutes = ({ routes }: { routes: RoutesTypes[] }) =>
@@ -29,38 +19,4 @@ const getRoutes = ({ routes }: { routes: RoutesTypes[] }) =>
     />
   ));
 
-const useGetUpdatedRoutes = ({
-  accessToken
-}: {
-  accessToken: string | null;
-}): RoutesTypes[] => {
-  const userProfile = useSelector(currentUserProfile);
-
-  if (!accessToken) return publicRoutes;
-  const isAdmin = userProfile?.isAdmin;
-
-  const resetPasswordRoute = publicRoutes.filter(
-    ({ path }) => path === PASSWORD_RESET
-  );
-
-  resetPasswordRoute[0].isPrivate = true;
-
-  const commonRoutes = [...privateRoutes, ...internalRoutes];
-
-  const availableRoutes = isAdmin
-    ? [...commonRoutes, ...adminRoutes]
-    : [...commonRoutes, ...resetPasswordRoute];
-
-  return availableRoutes;
-};
-
-const useCanGetNewToken = () => {
-  const { pathname } = window.location;
-  const restrictedRoutes = routes
-    .filter(({ isPrivate }) => !isPrivate)
-    .map(({ path }) => path);
-
-  return !restrictedRoutes.includes(pathname);
-};
-
-export { useGetUpdatedRoutes, getRoutes, useCanGetNewToken };
+export { getRoutes };

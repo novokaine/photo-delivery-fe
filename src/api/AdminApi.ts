@@ -3,7 +3,6 @@ import { withAuthRetry } from "./Common";
 import { BASE_URL, handleResponse } from "./Const";
 
 const adminApi = {
-  get: (url: string) => {},
   post: async (url: string, data: any) => {
     const accessToken = store.getState().TokenReducer.accessToken;
 
@@ -26,7 +25,7 @@ const adminApi = {
   uploadPhotos: async (data: FormData): Promise<any> => {
     const apiUrl = `${BASE_URL}/admin/upload-photos`;
 
-    const fetchFn = async () => {
+    const fetchFn = async (): Promise<Response> => {
       const accessToken = store.getState().TokenReducer.accessToken;
       if (!accessToken) throw new Error("No access token available");
 

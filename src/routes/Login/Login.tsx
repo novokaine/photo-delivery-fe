@@ -20,7 +20,6 @@ import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { loginAction } from "../../redux/actions/UserActions";
 import { DASHBOARD, PASSWORD_RESET, REGISTER } from "..";
 import { userFetchState } from "../../redux/selectors/UserSelectors";
-import { getCurrentToken } from "../../redux/selectors/TokenSelectors";
 
 import "./css/login.scss";
 
@@ -29,7 +28,7 @@ const Login = (): React.ReactElement => {
   const userState = useSelector(userFetchState);
   const isUserLoading = userState === LOADING;
   const location = useLocation();
-  const accessToken = useSelector(getCurrentToken);
+  const shouldCheckAuth = localStorage.getItem("shouldCheckAuth") === "true";
 
   const isError = userState === ERROR;
 
@@ -45,7 +44,7 @@ const Login = (): React.ReactElement => {
     onSubmit: (userData: UserDataTypes) => dispatch(loginAction(userData))
   });
 
-  if (accessToken) {
+  if (shouldCheckAuth) {
     const redirectPath = location.state?.from?.pathname || DASHBOARD;
     return <Navigate to={redirectPath} replace />;
   }

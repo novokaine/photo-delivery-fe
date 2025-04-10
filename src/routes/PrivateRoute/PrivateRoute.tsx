@@ -24,10 +24,12 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const currentToken = useSelector(getCurrentToken);
   const dispatch = useDispatch<AppDispatch>();
 
+  const shouldCheckAuth = localStorage.getItem("shouldCheckAuth") === "true";
+
   useLayoutEffect(() => {
-    if (currentToken || tokenFetchState === LOADING) return;
+    if (!shouldCheckAuth) return;
     dispatch(checkAuthStatusAction());
-  }, [currentToken, tokenFetchState, dispatch]);
+  }, [shouldCheckAuth, dispatch]);
 
   if (tokenFetchState === LOADING) return <Loader />;
 
