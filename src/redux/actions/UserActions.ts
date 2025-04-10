@@ -95,7 +95,6 @@ export const logoutAction = (): AppThunk => (dispatch) => {
     })
     .catch(() => {
       localStorage.setItem("shouldCheckAuth", "false");
-      debugger;
       dispatch(updateUserFetchState(ERROR));
     });
 };
