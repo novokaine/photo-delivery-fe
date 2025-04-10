@@ -14,7 +14,7 @@ import * as yup from "yup";
 import { resetPasswordAction } from "../../redux/actions/UserActions";
 import { AppDispatch } from "../../redux";
 import { userFetchState } from "../../redux/selectors/UserSelectors";
-import { LOADING, SUCCESS } from "../../const/Common";
+import { LOADING } from "../../const/Common";
 
 // @TODO - will be hanled at a later stage.
 const ResetPassword = () => {
@@ -76,21 +76,12 @@ const ResetPassword = () => {
   );
 
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        height: "100vh",
-        justifyContent: "center"
-      }}
-    >
+    <Container component="main" maxWidth="xs" className="reset-password">
       <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
         <Typography variant="h5" align="center" gutterBottom>
           Reset Password
         </Typography>
-        {userFetchStatus === SUCCESS ? successMsg : resetForm}
+        {resetForm}
       </Paper>
     </Container>
   );

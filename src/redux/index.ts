@@ -1,4 +1,5 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import RoutesReducer from "./reducers/RoutesReducer";
 import UserReducer from "./reducers/UserReducer";
 import PhotoReducer from "./reducers/PhotoReducer";
 import TokenReducer from "./reducers/TokenReducer";
@@ -8,6 +9,7 @@ const isDevEnv = process.env.NODE_ENV === "development";
 
 export const store = configureStore({
   reducer: {
+    RoutesReducer,
     UserReducer,
     PhotoReducer,
     TokenReducer
