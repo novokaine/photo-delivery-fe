@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IDLE } from "../../const/Common";
+import { FETCH_STATE, IDLE } from "../../const/Common";
 import { PhotoReducerType, PhotoType } from "../Types/PhotoTypes";
 
 const initialState: PhotoReducerType = {
@@ -13,13 +13,16 @@ const PhotoReducer = createSlice({
   name: "PhotoReducer",
   initialState,
   reducers: {
-    updatePhotoFetchState: (nextState, { payload }) => {
+    updatePhotoFetchState: (
+      nextState,
+      { payload }: PayloadAction<FETCH_STATE>
+    ) => {
       nextState.photoFetchState = payload;
     },
     updatePhotoList: (nextState, { payload }) => {
       nextState.photoList = payload;
     },
-    updateSelectedPhotos: (nextState, { payload }) => {
+    updateSelectedPhotos: (nextState, { payload }: PayloadAction<string[]>) => {
       nextState.selectedPhotos = payload;
     },
     updateDraftPhotos: (nextState, { payload }: PayloadAction<PhotoType[]>) => {

@@ -50,7 +50,7 @@ const App = () => {
       dispatch(updateRoutes([]));
     };
   }, [userData, dispatch]);
-  console.log(isLayoutReady);
+
   if (!isLayoutReady) return <Loader />;
 
   const availableRoutes = getRoutes({ routes: currentRoutes });
