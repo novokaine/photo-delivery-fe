@@ -19,10 +19,6 @@ const mockPhotos = [
   }
 ];
 
-const adminApi = {
-  uploadPhotos: jest.fn().mockResolvedValue(() => [{ some: "content" }])
-};
-
 describe("Photo actions test", () => {
   it("-> Sould update the loading state", () => {
     const loadingStateNew = photoReducer(
