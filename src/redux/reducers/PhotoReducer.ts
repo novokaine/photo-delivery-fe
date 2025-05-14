@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FETCH_STATE, IDLE } from "../../const/Common";
 import { PhotoReducerType, PhotoType } from "../Types/PhotoTypes";
 
-const initialState: PhotoReducerType = {
+export const initialState: PhotoReducerType = {
   photoFetchState: IDLE,
   photoList: [],
   selectedPhotos: [],

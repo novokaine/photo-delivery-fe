@@ -1,8 +1,10 @@
-import { LOADING } from "../../const/Common";
-import photoReducer, {
+import { IDLE, LOADING } from "../../const/Common";
+import PhotoReducer, {
+  initialState,
   updateDraftPhotos,
   updatePhotoFetchState,
-  updatePhotoList
+  updatePhotoList,
+  updateSelectedPhotos
 } from "../../redux/reducers/PhotoReducer";
 
 const mockPhotos = [
@@ -20,24 +22,35 @@ const mockPhotos = [
 ];
 
 describe("Photo actions test", () => {
+  it("-> Should handle initial state", () => {
+    expect(PhotoReducer(undefined, { type: "unknown" })).toEqual(initialState);
+  });
+
   it("-> Sould update the loading state", () => {
-    const loadingStateNew = photoReducer(
-      undefined,
-      updatePhotoFetchState(LOADING)
-    );
-    expect(loadingStateNew.photoFetchState).toEqual(LOADING);
+    const action = updatePhotoFetchState(LOADING);
+    const result = PhotoReducer(initialState, action);
+    expect(result.photoFetchState).toEqual(LOADING);
+
+    const idleAction = updatePhotoFetchState(IDLE);
+    const idleResult = PhotoReducer(initialState, idleAction);
+    expect(idleResult.photoFetchState).toEqual(IDLE);
   });
 
   it("-> Should update photo list", () => {
-    const newPhotoList = photoReducer(undefined, updatePhotoList(mockPhotos));
-    expect(newPhotoList.photoList).toEqual(mockPhotos);
+    const action = updatePhotoList(mockPhotos);
+    const result = PhotoReducer(initialState, action);
+    expect(result.photoList).toEqual(mockPhotos);
+  });
+
+  it("-> Should update selcted photos", () => {
+    const action = updateSelectedPhotos([mockPhotos[0].id]);
+    const result = PhotoReducer(initialState, action);
+    expect(result.selectedPhotos).toEqual([mockPhotos[0].id]);
   });
 
   it("-> Should update draft photos", () => {
-    const photoStateNew = photoReducer(
-      undefined,
-      updateDraftPhotos(mockPhotos)
-    );
-    expect(photoStateNew.draftPhotoList).toEqual(mockPhotos);
+    const action = updateDraftPhotos(mockPhotos);
+    const result = PhotoReducer(initialState, action);
+    expect(result.draftPhotoList).toEqual(mockPhotos);
   });
 });
