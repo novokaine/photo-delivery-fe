@@ -12,15 +12,18 @@ import { createLogger } from "redux-logger";
 
 const isDevEnv = process.env.NODE_ENV === "development";
 
-export const reducers = combineReducers({
+export const reducer = combineReducers({
   RoutesReducer,
   UserReducer,
   PhotoReducer,
   TokenReducer
 });
 
+export const setupTestStore = (preloadedState?: Partial<RootState>) =>
+  configureStore({ reducer, preloadedState });
+
 export const store = configureStore({
-  reducer: reducers,
+  reducer,
   middleware: (getDefaultMiddleware) =>
     isDevEnv
       ? getDefaultMiddleware().concat(createLogger({ collapsed: true }))
