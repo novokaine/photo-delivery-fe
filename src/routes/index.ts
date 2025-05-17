@@ -1,11 +1,11 @@
 import { lazy } from "react";
 import { RoutesTypes } from "./Types/RouteCommonTypes";
-import Login from "./Login";
 
 const ROUTES_PATH = {
   LOGIN: "/",
   REGISTER: "/register",
-  PASSWORD_RESET: "/reset-password",
+  FORGOT_PASSWORD: "/forgot-password",
+  RESET_PASSWORD: "/reset-password",
   DASHBOARD: "/dashboard",
   USER_PROFILE: "/user-profile",
   UPLOAD_PHOTOS: "/upload-photos"
@@ -14,7 +14,8 @@ const ROUTES_PATH = {
 export const {
   LOGIN,
   REGISTER,
-  PASSWORD_RESET,
+  FORGOT_PASSWORD,
+  RESET_PASSWORD,
   DASHBOARD,
   USER_PROFILE,
   UPLOAD_PHOTOS
@@ -37,35 +38,28 @@ export const {
 //   badGateway: "/502"
 // };
 
-// const Login = lazy(() => import("./Login"));
 const Register = lazy(() => import("./Register"));
-const DashBoard = lazy(() => import("./Dashboard"));
 const UserProfile = lazy(() => import("./UserProfile"));
-const ResetPassword = lazy(() => import("./ResetPasswrd"));
+const ForgotPassword = lazy(() => import("./ForgotPassword"));
+const Resetpassword = lazy(() => import("./ResetPassword"));
 const PhotoUpload = lazy(() => import("./PhotoUpload"));
 
 export const privateRoutes: RoutesTypes[] = [
-  {
-    path: DASHBOARD,
-    Component: DashBoard,
-    name: "Dashboard",
-    isPrivate: true
-  },
   {
     path: USER_PROFILE,
     Component: UserProfile,
     name: "Profile",
     isPrivate: true
+  },
+  {
+    path: RESET_PASSWORD,
+    Component: Resetpassword,
+    name: "Reset Password",
+    isPrivate: true
   }
 ];
 
 export const publicRoutes: RoutesTypes[] = [
-  {
-    path: LOGIN,
-    Component: Login,
-    name: "Login",
-    isPrivate: false
-  },
   {
     path: REGISTER,
     Component: Register,
@@ -73,9 +67,9 @@ export const publicRoutes: RoutesTypes[] = [
     isPrivate: false
   },
   {
-    path: PASSWORD_RESET,
-    Component: ResetPassword,
-    name: "Reset Password",
+    path: FORGOT_PASSWORD,
+    Component: ForgotPassword,
+    name: "Forgot Password",
     isPrivate: false
   }
 ];
@@ -90,11 +84,7 @@ export const adminRoutes: RoutesTypes[] = [
   }
 ];
 
-export const routes: RoutesTypes[] = [
-  ...privateRoutes,
-  ...publicRoutes,
-  ...adminRoutes
-];
+export const routes: RoutesTypes[] = [...privateRoutes, ...publicRoutes];
 
 export const internalRoutes = routes.filter(
   (route) => ![LOGIN, REGISTER].includes(route.path)

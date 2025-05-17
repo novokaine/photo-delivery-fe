@@ -14,9 +14,8 @@ import {
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import AppBar from "@mui/material/AppBar";
-import { internalRoutes } from "../../routes";
 import { logoutAction } from "../../redux/actions/UserActions";
-import { AppDispatch } from "../../redux";
+import { AppDispatch, store } from "../../redux";
 import { currentUserProfile } from "../../redux/selectors/UserSelectors";
 
 import "./css/LayoutWrapper.scss";
@@ -68,6 +67,8 @@ const LeftMenu: React.FC<{ open: boolean }> = ({ open }): JSX.Element => {
   const getLinkClassName = ({ path }: { path: string }) =>
     location.pathname.startsWith(path) ? "active" : "";
 
+  const { availableRoutes } = store.getState().RoutesReducer;
+
   return (
     <Drawer
       sx={{
@@ -88,10 +89,10 @@ const LeftMenu: React.FC<{ open: boolean }> = ({ open }): JSX.Element => {
       }}
     >
       <List className="user-menu">
-        {internalRoutes.map(({ path, name }) => (
+        {availableRoutes.map(({ path, name }) => (
           <ListItem key={path} disablePadding>
-            <Button>
-              <Link to={path} className={getLinkClassName({ path })}>
+            <Button className={getLinkClassName({ path })}>
+              <Link to={path}>
                 <ListItemText primary={name} />
               </Link>
             </Button>

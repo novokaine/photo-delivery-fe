@@ -12,8 +12,9 @@ import {
   updateAccessToken,
   updateTokenFetchState
 } from "../reducers/TokenReducer";
-import { getCurrentToken } from "../selectors/TokenSelectors";
 import { LOGIN } from "../../routes";
+import userApi from "../../api/UserApi";
+import { getCurrentToken } from "../selectors/TokenSelectors";
 
 export const registerAction =
   ({ email, userName, password }: UserDataTypes): AppThunk =>
@@ -23,7 +24,7 @@ export const registerAction =
     }
 
     dispatch(updateRegisterState(LOADING));
-    api
+    userApi
       .register({ email, userName, password })
       .then(() => {
         dispatch(updateRegisterState(SUCCESS));
@@ -37,57 +38,63 @@ export const loginAction =
   ({ userName, password }: UserDataTypes): AppThunk =>
   (dispatch) => {
     dispatch(updateUserFetchState(LOADING));
-    api
+    userApi
       .login({ userName, password })
       .then(({ userData, accessToken }) => {
         dispatch(updateUserProfile(userData));
         dispatch(updateAccessToken(accessToken));
         dispatch(updateUserFetchState(SUCCESS));
         dispatch(updateTokenFetchState(SUCCESS));
+        localStorage.setItem("shouldCheckAuth", "true");
       })
       .catch(() => {
         dispatch(updateUserProfile(null));
         dispatch(updateUserFetchState(ERROR));
         dispatch(updateAccessToken(ERROR));
+        localStorage.removeItem("shouldCheckAuth");
       });
   };
 
 export const checkAuthStatusAction = (): AppThunk => (dispatch, getState) => {
-  dispatch(updateUserFetchState(LOADING));
-  dispatch(updateTokenFetchState(LOADING));
   const userProfile = currentUserProfile(getState());
   const accessToken = getCurrentToken(getState());
-
   if (userProfile && accessToken) return;
 
-  api
+  dispatch(updateUserFetchState(LOADING));
+  dispatch(updateTokenFetchState(LOADING));
+
+  userApi
     .checkAuthStatus()
     .then(({ userData, accessToken }) => {
       dispatch(updateUserProfile(userData));
       dispatch(updateAccessToken(accessToken));
       dispatch(updateUserFetchState(SUCCESS));
       dispatch(updateTokenFetchState(SUCCESS));
+      localStorage.setItem("shouldCheckAuth", "true");
     })
     .catch(() => {
       dispatch(updateUserProfile(null));
       dispatch(updateAccessToken(null));
       dispatch(updateUserFetchState(ERROR));
       dispatch(updateTokenFetchState(ERROR));
+      localStorage.setItem("shouldCheckAuth", "false");
     });
 };
 
 export const logoutAction = (): AppThunk => (dispatch) => {
   dispatch(updateUserFetchState(LOADING));
-  api
+  userApi
     .logout()
     .then(() => {
       dispatch(updateUserProfile(null));
       dispatch(updateAccessToken(null));
       dispatch(updateUserFetchState(IDLE));
       dispatch(updateTokenFetchState(IDLE));
+      localStorage.setItem("shouldCheckAuth", "false");
       window.location.href = LOGIN;
     })
     .catch(() => {
+      localStorage.setItem("shouldCheckAuth", "false");
       dispatch(updateUserFetchState(ERROR));
     });
 };
@@ -96,7 +103,7 @@ export const resetPasswordAction =
   ({ email }: { email: string }): AppThunk =>
   (dispatch) => {
     dispatch(updateUserFetchState(LOADING));
-    api.passwordReset({ email }).then(() => {
+    userApi.passwordReset({ email }).then(() => {
       dispatch(updateUserFetchState(SUCCESS));
     });
   };
@@ -109,7 +116,9 @@ export const getUserProfileAction = (): AppThunk => (dispatch, getState) => {
 
   api
     .get("/user-profile")
-    .then(({ message: { username, email, isAdmin } }) => {
+    .then((response) => {
+      // @ts-ignore
+      const { username, email, isAdmin } = response.message;
       dispatch(updateUserProfile({ username, email, isAdmin }));
       dispatch(updateUserFetchState(IDLE));
     })

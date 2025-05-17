@@ -1,4 +1,4 @@
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import {
@@ -18,18 +18,13 @@ import DialogModal from "../../components/DialogModal";
 import { updateUserFetchState } from "../../redux/reducers/UserReducer";
 import { UserDataTypes } from "../../redux/Types/UserDataTypes";
 import { loginAction } from "../../redux/actions/UserActions";
-import { DASHBOARD, PASSWORD_RESET, REGISTER } from "..";
+import { FORGOT_PASSWORD, REGISTER } from "..";
 import { userFetchState } from "../../redux/selectors/UserSelectors";
-import { getCurrentToken } from "../../redux/selectors/TokenSelectors";
-
-import "./css/login.scss";
 
 const Login = (): React.ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
   const userState = useSelector(userFetchState);
   const isUserLoading = userState === LOADING;
-  const location = useLocation();
-  const accessToken = useSelector(getCurrentToken);
 
   const isError = userState === ERROR;
 
@@ -44,11 +39,6 @@ const Login = (): React.ReactElement => {
     }),
     onSubmit: (userData: UserDataTypes) => dispatch(loginAction(userData))
   });
-
-  if (accessToken) {
-    const redirectPath = location.state?.from?.pathname || DASHBOARD;
-    return <Navigate to={redirectPath} replace />;
-  }
 
   return (
     <Container
@@ -115,7 +105,7 @@ const Login = (): React.ReactElement => {
         <Box mt={2} alignContent="end">
           <Stack spacing={5} direction="row" justifyContent="flex-end">
             <Link to={REGISTER}>Register</Link>
-            <Link to={PASSWORD_RESET}>Forgot password?</Link>
+            <Link to={FORGOT_PASSWORD}>Forgot password?</Link>
           </Stack>
         </Box>
       </Paper>

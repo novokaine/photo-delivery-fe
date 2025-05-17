@@ -23,11 +23,12 @@ export const getPhotoListAction = (): AppThunk => (dispatch, getState) => {
   dispatch(updatePhotoFetchState(LOADING));
   api
     .get("/images")
+    // @ts-ignore
     .then(({ images }) => {
       dispatch(updatePhotoList(images));
-      dispatch(updateSelectedPhotos(IDLE));
+      dispatch(updatePhotoFetchState(IDLE));
     })
-    .catch((err) => dispatch(updatePhotoFetchState(ERROR)));
+    .catch(() => dispatch(updatePhotoFetchState(ERROR)));
 };
 
 export const updateSelectedImageAction =
