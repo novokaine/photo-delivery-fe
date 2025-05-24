@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState, FC, ReactElement } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux";
+import { AppDispatch } from "../../redux";
 import { Button, Checkbox } from "@mui/material";
 import {
   deleteDraftPhotos,
@@ -10,31 +10,61 @@ import {
 import { createPhotoPreview } from "./photoUtils";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import BackupIcon from "@mui/icons-material/Backup";
+import {
+  getCurrentPhotoDraft,
+  getPhotoDublicates
+} from "../../redux/selectors/PhotoSelectors";
+import { PhotoType } from "../../redux/Types/PhotoTypes";
 
-const PhotoHandler = () => {
+interface ListProps {
+  photoList: PhotoType[];
+  className?: string;
+  photosToDelete: string[];
+  setPhotosToDelete: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+const RenderPhotList: FC<ListProps> = ({
+  photoList,
+  className,
+  photosToDelete,
+  setPhotosToDelete
+}): ReactElement => {
+  const onPhotoClick = ({ id }: { id: string }) =>
+    setPhotosToDelete((prev: string[]) =>
+      prev?.includes(id)
+        ? prev.filter((item) => item !== id)
+        : [...(prev || []), id]
+    );
+
+  const renderedList = photoList.map(({ id, src }) => (
+    <li
+      id={id}
+      key={id}
+      className={className}
+      onClick={() => onPhotoClick({ id })}
+    >
+      <Checkbox className="checkbox" checked={photosToDelete.includes(id)} />
+      <img src={src} alt="" width="200" />
+    </li>
+  ));
+
+  return <>{renderedList}</>;
+};
+
+const Dropzonearea: FC = (): ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
-  const [photosToDelete, setPhotosToDelete] = useState<string[]>([]);
-
   const onDrop = useCallback(
-    (files: FileWithPath[]) =>
-      dispatch(updateDraftPhotosActions(createPhotoPreview(files))),
+    (files: FileWithPath[]) => {
+      dispatch(updateDraftPhotosActions(createPhotoPreview(files)));
+    },
     [dispatch]
   );
-  const { draftPhotoList } = useSelector(
-    (state: RootState) => state.PhotoReducer
-  );
-
-  const {
-    // acceptedFiles, fileRejections,
-    getRootProps,
-    getInputProps
-  } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [".jpeg", ".png"]
     },
     onDrop
   });
-
   const dropArea = (
     <section className="container">
       <div {...getRootProps({ className: "dropzone" })}>
@@ -45,22 +75,22 @@ const PhotoHandler = () => {
     </section>
   );
 
-  const files = draftPhotoList?.map(({ id, src }) => (
-    <li
-      id={id}
-      key={id}
-      onClick={() =>
-        setPhotosToDelete((prev) =>
-          prev?.includes(id)
-            ? prev.filter((item) => item !== id)
-            : [...(prev || []), id]
-        )
-      }
-    >
-      <Checkbox className="checkbox" checked={photosToDelete.includes(id)} />
-      <img src={src} alt="" width="300" />
-    </li>
-  ));
+  return dropArea;
+};
+
+const PhotoPreview: FC = (): ReactElement => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [photosToDelete, setPhotosToDelete] = useState<string[]>([]);
+  const dublicates = useSelector(getPhotoDublicates);
+  const draftPhotoList = useSelector(getCurrentPhotoDraft);
+
+  const newFilesList = draftPhotoList.filter(
+    ({ name }) => !dublicates.includes(name)
+  );
+
+  const dublicateList = draftPhotoList.filter(({ name }) =>
+    dublicates.includes(name)
+  );
 
   const photoPreview = (
     <div className="photos-list">
@@ -75,19 +105,42 @@ const PhotoHandler = () => {
           Delete selected
         </Button>
       )}
-      {files.length > 0 && (
+      {newFilesList.length > 0 && (
         <Button onClick={() => dispatch(uploadPhotosAction())}>Submit</Button>
       )}
-      <ul>{files}</ul>
+
+      <ul>
+        <RenderPhotList
+          photoList={newFilesList}
+          photosToDelete={photosToDelete}
+          setPhotosToDelete={setPhotosToDelete}
+        />
+      </ul>
+
+      {dublicateList.length > 0 && (
+        <>
+          <h4>Dublicates</h4>
+          <ul>
+            <RenderPhotList
+              photoList={dublicateList}
+              photosToDelete={photosToDelete}
+              className="dublicate"
+              setPhotosToDelete={setPhotosToDelete}
+            />
+          </ul>
+        </>
+      )}
     </div>
   );
 
-  return (
-    <>
-      {dropArea}
-      {photoPreview}
-    </>
-  );
+  return photoPreview;
 };
+
+const PhotoHandler: FC = (): ReactElement => (
+  <>
+    <Dropzonearea />
+    <PhotoPreview />
+  </>
+);
 
 export default PhotoHandler;

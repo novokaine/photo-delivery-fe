@@ -16,6 +16,11 @@
           right: 0;
           top: 0;
         }
+        &.dublicate {
+          img {
+            opacity: 0.5;
+          }
+        }
         svg {
           path {
             fill: #fff;

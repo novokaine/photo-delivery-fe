@@ -17,4 +17,5 @@ export interface PhotoReducerType {
   photoList: string[];
   selectedPhotos: string[];
   draftPhotoList: PhotoType[];
+  dublicates: string[];
 }
