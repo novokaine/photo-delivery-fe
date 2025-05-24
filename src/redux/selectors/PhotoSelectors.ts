@@ -10,3 +10,6 @@ export const getCurrentSelectedImages = (state: RootState) =>
 // Admin management
 export const getCurrentPhotoDraft = (state: RootState) =>
   state.PhotoReducer.draftPhotoList;
+
+export const getPhotoDublicates = (state: RootState) =>
+  state.PhotoReducer.dublicates;

@@ -6,7 +6,8 @@ export const initialState: PhotoReducerType = {
   photoFetchState: IDLE,
   photoList: [],
   selectedPhotos: [],
-  draftPhotoList: []
+  draftPhotoList: [],
+  dublicates: []
 };
 
 const PhotoReducer = createSlice({
@@ -25,6 +26,9 @@ const PhotoReducer = createSlice({
     updateSelectedPhotos: (nextState, { payload }: PayloadAction<string[]>) => {
       nextState.selectedPhotos = payload;
     },
+    updateDublicates: (nextState, { payload }: PayloadAction<string[]>) => {
+      nextState.dublicates = payload;
+    },
     updateDraftPhotos: (nextState, { payload }: PayloadAction<PhotoType[]>) => {
       nextState.draftPhotoList = payload;
     }
@@ -35,7 +39,8 @@ export const {
   updatePhotoFetchState,
   updatePhotoList,
   updateSelectedPhotos,
-  updateDraftPhotos
+  updateDraftPhotos,
+  updateDublicates
 } = PhotoReducer.actions;
 
 export default PhotoReducer.reducer;

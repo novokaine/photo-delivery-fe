@@ -4,6 +4,7 @@ import api from "../../api/Api";
 import { ERROR, IDLE, LOADING, SUCCESS } from "../../const/Common";
 import {
   updateDraftPhotos,
+  updateDublicates,
   updatePhotoFetchState,
   updatePhotoList,
   updateSelectedPhotos
@@ -60,6 +61,7 @@ export const updateDraftPhotosActions =
     if (filtered.length === 0) return;
 
     dispatch(updateDraftPhotos([...currentDraft, ...filtered]));
+    dispatch(checkForDublicatesAction());
   };
 
 export const deleteDraftPhotos =
@@ -76,6 +78,24 @@ export const deleteDraftPhotos =
     );
 
     dispatch(updateDraftPhotos(filtered));
+  };
+
+export const checkForDublicatesAction =
+  (): AppThunk => (dispatch, getState) => {
+    const draftPhotos = getCurrentPhotoDraft(getState()).map(
+      ({ name }) => name
+    );
+
+    dispatch(updatePhotoFetchState(LOADING));
+    adminApi
+      .post("/check-dublicates", draftPhotos)
+      .then((response) => {
+        dispatch(updateDublicates(response));
+        dispatch(updatePhotoFetchState(IDLE));
+      })
+      .catch(() => {
+        dispatch(updatePhotoFetchState(ERROR));
+      });
   };
 
 export const uploadPhotosAction =
