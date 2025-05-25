@@ -1,4 +1,4 @@
-import { IDLE } from "../../const/Common";
+import { IDLE, LOADING } from "../../const/Common";
 import { setupTestStore } from "../../redux";
 import {
   updateDraftPhotosActions,
@@ -50,18 +50,22 @@ describe("Photo actions", () => {
         photoFetchState: IDLE,
         photoList: [],
         selectedPhotos: [],
-        draftPhotoList: [existingMockPhoto]
+        draftPhotoList: [existingMockPhoto],
+        dublicates: []
       }
     });
   });
 
   it("-> Should handle the update of draft photos", async () => {
+    (adminApi.post as jest.Mock).mockResolvedValue({});
+
     const store = setupTestStore({
       PhotoReducer: {
         photoFetchState: IDLE,
         photoList: [],
         selectedPhotos: [],
-        draftPhotoList: [existingMockPhoto]
+        draftPhotoList: [existingMockPhoto],
+        dublicates: []
       }
     });
 
@@ -82,6 +86,8 @@ describe("Photo actions", () => {
       newMockPhoto
     ]);
 
+    expect(photoState.photoFetchState).toEqual(LOADING);
+
     // Update draftphotos with an empty array
     store.dispatch(updateDraftPhotosActions([]));
     expect(store.getState().PhotoReducer.draftPhotoList).toEqual([]);
@@ -93,7 +99,8 @@ describe("Photo actions", () => {
         photoFetchState: IDLE,
         photoList: [],
         selectedPhotos: [],
-        draftPhotoList: [existingMockPhoto, newMockPhoto]
+        draftPhotoList: [existingMockPhoto, newMockPhoto],
+        dublicates: []
       }
     });
 
